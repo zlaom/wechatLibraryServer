@@ -55,7 +55,35 @@ module.exports = {
     // 根据用户和书本取消一本书的预约
     delBookStatus:function delBookStatus(userId,bookId,type) {
         return BookStatus.remove({userId:userId,bookId:bookId,type:type}).exec();
+    },
+
+    // 图书状态
+    // 通过用户id得到预约的书
+    getUserReserveBook: function getUserReserveBook(userId) {
+        var query = {
+            userId: userId,
+            type: 'reserve'
+        };
+        return BookStatus.find(query).exec();
+    },
+
+    // 通过用户id得到已借的书
+    getUserBorrowBook: function getUserReserveBook(userId) {
+        var query = {
+            userId: userId,
+            type: 'borrow'
+        };
+        return BookStatus.find(query).exec();
     }
+
+    // 通过用户id得到推荐的书
+   /* getUserRecommendBook: function getUserReserveBook(userId) {
+        // var query = {
+        //     openId: userId,
+        //     type: 'recommend'
+        // };
+        return BookStatus.find(query).exec();
+    }*/
 };
 /*
 bookCover: res.data.bookCover,
