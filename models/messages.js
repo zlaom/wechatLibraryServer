@@ -18,8 +18,8 @@ module.exports = {
     },
 
     // 通过用户ID和messageId删除一条消息
-    delMessagesByUserMessageId:function   delMessagesByUserMessageId(userId,messageId){
-        return Message.remove({userId:userId,_id:messageId}).exec();
+    delMessagesByUserMessageId: function delMessagesByUserMessageId(userId, messageId) {
+        return Message.remove({userId: userId, _id: messageId}).exec();
     }
 
 };

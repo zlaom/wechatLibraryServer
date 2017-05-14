@@ -139,14 +139,14 @@ router.get('/messages', function (req, res, next) {
                 messages: obj
             };
             /*var test = moment().format("x");
-            console.log(objectIdToTimestamp(obj[0]._id));
-            console.log(objectIdToTimestamp(obj[1]._id));
-            console.log(test-objectIdToTimestamp(obj[1]._id));
-            var time = moment(objectIdToTimestamp(obj[1]._id),"M").fromNow();
-            console.log(time);
-            console.log("m");
-            console.log(test);
-            //console.log(data);*/
+             console.log(objectIdToTimestamp(obj[0]._id));
+             console.log(objectIdToTimestamp(obj[1]._id));
+             console.log(test-objectIdToTimestamp(obj[1]._id));
+             var time = moment(objectIdToTimestamp(obj[1]._id),"M").fromNow();
+             console.log(time);
+             console.log("m");
+             console.log(test);
+             //console.log(data);*/
             res.send(data);
         })
 });

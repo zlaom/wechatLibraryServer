@@ -92,7 +92,7 @@ router.post('/bookReserve', function (req, res, next) {
         bookId: bookId,
         userId: userId,
         type: type,
-        createTime:moment().toDate()
+        createTime: moment().toDate()
     };
     var message = {
         userId: '',
@@ -110,20 +110,20 @@ router.post('/bookReserve', function (req, res, next) {
                 .then(function (obj) {
                     message.userId = userId;
                     message.author = author;
-                    message.messageData =  '您已经成功预约《' + obj.bookTitle + '》!';
+                    message.messageData = '您已经成功预约《' + obj.bookTitle + '》!';
                     //console.log(message);
                     MessageModel.create(message);
 
                     // 设置定时器提醒还书
-                   /* setTimeout(function () {
-                        var message = {
-                            userId: userId,
-                            author: author,
-                            messageData: '您借的《' + obj.bookTitle + '》已到期! 请尽快还书！'
-                        };
-                        console.log(message);
-                        MessageModel.create(message);
-                    }, 300000);*/
+                    /* setTimeout(function () {
+                     var message = {
+                     userId: userId,
+                     author: author,
+                     messageData: '您借的《' + obj.bookTitle + '》已到期! 请尽快还书！'
+                     };
+                     console.log(message);
+                     MessageModel.create(message);
+                     }, 300000);*/
                 });
             res.send('success');//返回成功
         })
