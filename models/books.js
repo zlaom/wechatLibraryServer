@@ -18,6 +18,11 @@ module.exports = {
         return Book.findOne(query);
     },
 
+    // 通过分类查找一类书
+    getBooksByBookSort: function getBooksByBookSort(sorts){
+        return Book.find({bookSorts:sorts}).exec();
+    },
+
     // 查找一个分类
     getBooksBySort:function getBooksBySort(sort) {
         return Book.find({bookSorts:sort}).exec()
@@ -34,11 +39,6 @@ module.exports = {
         });*/
     },
 
-    // 通过bookId预约一本书
-    bookStatus:function bookStatus(bookStatus){
-        return BookStatus.create(bookStatus).exec();
-    },
-
     // 更新书本可借数
     bookCanUpdate:function bookCanUpdate(num,bookId){
         if(num == 1){
@@ -50,6 +50,11 @@ module.exports = {
                 }
             });
         }
+    }
+
+   /* // 通过bookId预约一本书
+    bookStatus:function bookStatus(bookStatus){
+        return BookStatus.create(bookStatus).exec();
     },
 
     // 根据用户和书本取消一本书的预约
@@ -74,23 +79,16 @@ module.exports = {
             type: 'borrow'
         };
         return BookStatus.find(query).exec();
-    }
+    },
 
-    // 通过用户id得到推荐的书
-   /* getUserRecommendBook: function getUserReserveBook(userId) {
-        // var query = {
-        //     openId: userId,
-        //     type: 'recommend'
-        // };
-        return BookStatus.find(query).exec();
+    // 通过
+    getBookStatusByTime:function getBookStatusByTime(start,end) {
+        console.log(start);
+        return BookStatus.find({createTime: {$gte: start, $lt: end}}).exec();
+    },
+
+    //通过userId和bookId获得一个用户的bookStatus
+    getBookStatusByUserIdBookId:function getBookStatusByUserIdBookId(userId,bookId,type) {
+        return BookStatus.findOne({userId:userId,bookId:bookId,type:type}).exec();
     }*/
 };
-/*
-bookCover: res.data.bookCover,
-    bookName: res.data.bookName,
-    bookAuthor: res.data.bookAuthor,
-    bookPress: res.data.bookPress,
-    bookSort: res.data.bookSort,
-    bookAbstract: res.data.bookAbstract,
-    bookNum: res.data.bookNum,
-    bookCan: res.data.bookCan*/
