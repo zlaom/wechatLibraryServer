@@ -41,7 +41,7 @@ module.exports = {
 
     // 获得一个时间之前的书本状态
     getBookStatusByEnd: function getBookStatusByStart(end, type) {
-        return BookStatus.find({createTime: {$lt: end}, type: type}).sort({"createTime": -1}).exec();
+        return BookStatus.find({createTime: {$lt: end}, type: type}).exec();
     },
 
     //通过userId和bookId获得一个用户的bookStatus
