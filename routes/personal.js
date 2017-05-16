@@ -16,7 +16,7 @@ var objectIdToTimestamp = require('objectid-to-timestamp');
 // 获得应用详情页数据
 router.get('/', function (req, res, next) {
     var userId = req.query.userId;
-    console.log(userId);
+    console.log("ok"+userId);
     var borrowBook = [];
     var reserveBook = [];
     //var recommendBook = [];
@@ -32,9 +32,13 @@ router.get('/', function (req, res, next) {
     // 获得预约的书
     BookStatus.getUserReserveBook(userId)
         .then(function (obj) {
-            if (!obj) {
-                console.log('查找:' + query + ' reserve,未找到结果!');
+            console.log("nide");
+            console.log(obj.length);
+            if (!obj.length) {
+                console.log('查找 reserve,未找到结果!');
+                flag0 = -1;
             } else {
+                console.log("nide");
                 for (var i = 0; i < obj.length; i++) {
                     Book.getBookByBookId(obj[i].bookId)
                         .then(function (book) {
@@ -51,6 +55,7 @@ router.get('/', function (req, res, next) {
                                 data.reserveBook = reserveBook;
                                 flag0 = -1;
                                 if (flag0 == -1 && flag1 == -1) {
+                                    console.log(data);
                                     res.send(data);
                                 }
                             }
@@ -60,8 +65,9 @@ router.get('/', function (req, res, next) {
         });
     BookStatus.getUserBorrowBook(userId)
         .then(function (obj) {
-            if (!obj) {
-                console.log('查找:' + query + ' borrow,未找到结果!');
+            if (!obj.length) {
+                console.log('查找borrow,未找到结果!');
+                flag1 == -1;
             } else {
                 for (var i = 0; i < obj.length; i++) {
                     Book.getBookByBookId(obj[i].bookId)
@@ -79,6 +85,7 @@ router.get('/', function (req, res, next) {
                                 data.borrowBook = borrowBook;
                                 flag1 = -1;
                                 if (flag0 == -1 && flag1 == -1) {
+                                    console.log(data);
                                     res.send(data);
                                 }
                             }

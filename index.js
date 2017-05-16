@@ -1,3 +1,87 @@
+/*
+ const WebSocket = require('ws');
+ const util = require("util");
+ var fs = require('fs');
+ var https = require('https');
+
+ var server = https.createServer(
+ {
+ 'key': fs.readFileSync('path/to/privatekey.pem'),
+ 'cert': fs.readFileSync('path/to/certificate.pem')
+ }
+ );
+ var  url = require('url');
+ var  WebSocketServer = require('ws').Server;
+ var  wss = new WebSocketServer({
+ server: server
+ });
+ var express = require('express');
+ var app = express();
+ var port = 8080;
+
+ app.use(function(req, res) {
+ res.send({
+ msg: "hello"
+ });
+ });
+
+ wss.on('connection', function connection(socket) {
+ console.log("有新客户端连接!");
+
+ // 构造客户端对象
+ var newclient = {
+ socket:socket,
+ name:false
+ };
+
+ socket.on('message', function incoming(msg) {
+ var currentTime = getTime();
+ // 判断是不是第一次连接，以第一条消息作为用户名
+ if(!newclient.name){
+ newclient.name = msg;
+ wss.clients.forEach(function each(client) {
+ if (client.readyState === WebSocket.OPEN) {
+ client.send("welcome_系统管理员_" + currentTime + "_欢迎" + msg + "加入聊天！");
+ }
+ });
+ console.log(newclient.name + "加入聊天。");
+ }
+ else{
+ wss.clients.forEach(function each(client) {
+ if (client !== socket && client.readyState === WebSocket.OPEN) {
+ client.send("other_" + newclient.name + "_" + currentTime + "_" + msg);
+ }
+ else if(client == socket){
+ client.send("self_" + newclient.name + "_" + currentTime + "_" + msg);
+ }
+ console.log(newclient.name + "于" + currentTime + "说：" + msg);
+ });
+ }
+ });
+
+ socket.on('close', function close() {
+ var currentTime = getTime();
+ wss.clients.forEach(function each(client) {
+ if (client.readyState === WebSocket.OPEN) {
+ client.send("leave_系统管理员_" + currentTime + "_" + newclient.name + "离开聊天！");
+ }
+ console.log(newclient.name + "离开聊天。");
+ });
+ });
+ });
+
+ var getTime=function(){
+ var date = new Date();
+ return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+ };
+
+ server.on('request', app);
+ server.listen(port, function() {
+ console.log('Listening on ' + server.address().port)
+ });
+ */
+
+
 var path = require('path');
 var express = require('express');
 var session = require('express-session');
@@ -8,11 +92,21 @@ var routes = require('./routes');
 var pkg = require('./package');
 var winston = require('winston');
 var expressWinston = require('express-winston');
-var cycle = require('./public/js/cycle');
-var http = require('http').Server(app);
+/*var cycle = require('./public/js/cycle');*/
+var http = require('http');
+var https = require('https');
 var io = require('socket.io')(http);
+const fs = require('fs');
 
 var app = express();
+
+const credentials = {
+    key: fs.readFileSync('path/to/privatekey.pem'),
+    cert: fs.readFileSync('path/to/certificate.pem')
+};
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
 
 // 设置模板目录
 app.set('views', path.join(__dirname, 'views'));
@@ -60,18 +154,18 @@ app.use(function (req, res, next) {
     next();
 });
 
-// 正常请求的日志
-app.use(expressWinston.logger({
-    transports: [
-        new (winston.transports.Console)({
-            json: true,
-            colorize: true
-        }),
-        new winston.transports.File({
-            filename: 'logs/success.log'
-        })
-    ]
-}));
+/*// 正常请求的日志
+ app.use(expressWinston.logger({
+ transports: [
+ new (winston.transports.Console)({
+ json: true,
+ colorize: true
+ }),
+ new winston.transports.File({
+ filename: 'logs/success.log'
+ })
+ ]
+ }));*/
 
 // 路由
 routes(app);
@@ -117,7 +211,10 @@ if (module.parent) {
     module.exports = app;
 } else {
     // 监听端口，启动程序
-    app.listen(config.port, function () {
-        console.log(`${pkg.name} listening on port ${config.port}`);
+    httpServer.listen(config.port1, function () {
+        console.log(`${pkg.name} listening on port ${config.port1}`);
+    });
+    httpsServer.listen(config.port2, function () {
+        console.log(`${pkg.name} listening on port ${config.port2}`);
     });
 }

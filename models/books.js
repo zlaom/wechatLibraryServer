@@ -50,6 +50,11 @@ module.exports = {
                 }
             });
         }
+    },
+
+    // 按照搜索内容查找
+    getBookBySearch:function getBookBySearch(query) {
+        return Book.find(query).exec()
     }
 
     /* // 通过bookId预约一本书

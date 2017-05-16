@@ -3,7 +3,7 @@
  */
 var pFunction = require('./publicFunction');
 
-var interval = 1000;// 设置扫描时间间隔
+var interval = 100000;// 设置扫描时间间隔
 
 // 按时间按间隔检测借书数据并提醒还书
 setInterval(function () {
