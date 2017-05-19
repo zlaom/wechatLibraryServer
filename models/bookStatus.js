@@ -22,7 +22,7 @@ module.exports = {
             userId: userId,
             type: 'reserve'
         };
-        return BookStatus.find(query).exec();
+        return BookStatus.find(query).sort({_id: -1}).exec();
     },
 
     // 通过用户id得到已借的书
@@ -31,7 +31,7 @@ module.exports = {
             userId: userId,
             type: 'borrow'
         };
-        return BookStatus.find(query).exec();
+        return BookStatus.find(query).sort({_id: -1}).exec();
     },
 
     // 获得一段时间的书本状态
