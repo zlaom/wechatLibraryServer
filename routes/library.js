@@ -20,7 +20,7 @@ router.get('/bookDetail', function (req, res, next) {
     BookModel.getBookByBookId(bookId).then(function (book) {
         var Sorts = book.bookSorts;
         var BookId = book.bookId;
-        book.bookCover = 'http://localhost:3000/img/' + book.bookCover;
+        //book.bookCover = 'http://localhost:3000/img/' + book.bookCover;
         var sorts = "";
         for (var i = 0; i < book.bookSorts.length; i++) {
             var sort = book.bookSorts[i];
@@ -55,7 +55,8 @@ router.get('/bookDetail', function (req, res, next) {
                 relatedBooks[i] = {
                     bookId: book1[i].bookId,
                     bookTitle: book1[i].bookTitle,
-                    bookCover: 'http://localhost:3000/img/' + book1[i].bookCover
+                    //bookCover: 'http://localhost:3000/img/' + book1[i].bookCover
+                    bookCover: book1[i].bookCover
                 };
             }
             console.log(relatedBooks);
@@ -181,7 +182,8 @@ router.get('/sortDetail', function (req, res, next) {
             for (var i = 0; i < obj.length; i++) {
                 books[i] = {
                     bookId: obj[i].bookId,
-                    cover: 'http://localhost:3000/img/' + obj[i].bookCover,
+                   // cover: 'http://localhost:3000/img/' + obj[i].bookCover,
+                    cover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
                     bookAbstract: obj[i].bookAbstract,
                     bookNum: obj[i].bookNum,

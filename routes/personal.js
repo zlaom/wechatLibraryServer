@@ -32,13 +32,19 @@ router.get('/', function (req, res, next) {
     // 获得预约的书
     BookStatus.getUserReserveBook(userId)
         .then(function (obj) {
-            console.log("nide");
+            console.log("nide1");
             console.log(obj.length);
             if (!obj.length) {
                 console.log('查找 reserve,未找到结果!');
                 flag0 = -1;
+                if (flag0 == -1 && flag1 == -1) {
+                    console.log("6666666666666666666666666666666");
+                    console.log(data);
+                    res.send(data);
+                }
             } else {
-                console.log("nide");
+                console.log("nide3");
+                console.log(obj);
                 for (var i = 0; i < obj.length; i++) {
                     Book.getBookByBookId(obj[i].bookId)
                         .then(function (book) {
@@ -55,6 +61,7 @@ router.get('/', function (req, res, next) {
                                 data.reserveBook = reserveBook;
                                 flag0 = -1;
                                 if (flag0 == -1 && flag1 == -1) {
+                                    console.log("6666666666666666666666666666666");
                                     console.log(data);
                                     res.send(data);
                                 }
@@ -65,9 +72,15 @@ router.get('/', function (req, res, next) {
         });
     BookStatus.getUserBorrowBook(userId)
         .then(function (obj) {
+            console.log("nide2");
             if (!obj.length) {
                 console.log('查找borrow,未找到结果!');
                 flag1 == -1;
+                if (flag0 == -1 && flag1 == -1) {
+                    console.log("6666666666666666666666666666666");
+                    console.log(data);
+                    res.send(data);
+                }
             } else {
                 for (var i = 0; i < obj.length; i++) {
                     Book.getBookByBookId(obj[i].bookId)
@@ -85,6 +98,7 @@ router.get('/', function (req, res, next) {
                                 data.borrowBook = borrowBook;
                                 flag1 = -1;
                                 if (flag0 == -1 && flag1 == -1) {
+                                    console.log("6666666666666666666666666666666");
                                     console.log(data);
                                     res.send(data);
                                 }

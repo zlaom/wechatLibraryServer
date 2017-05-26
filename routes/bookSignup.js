@@ -14,7 +14,7 @@ var BookModel = require('../models/books');
 //GET书籍录入页面
 router.get('/', function (req, res, next) {
     console.log('bookGet');
-    res.render('bookSignUp');
+    res.render('bookSignup');
 });
 
 // POST书籍录入路由library/bookSignup

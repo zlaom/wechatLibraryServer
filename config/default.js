@@ -1,6 +1,7 @@
 module.exports = {
-    port1: 3000,//http
-    port2: 3001,//https
+    port:3000,
+/*    port1: 3000,//http
+    port2: 3001,//https*/
     session: {
         secret: 'library',
         key: 'library',

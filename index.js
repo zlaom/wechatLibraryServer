@@ -106,6 +106,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
+/*
 if (module.parent) {
     module.exports = app;
 } else {
@@ -117,3 +118,14 @@ if (module.parent) {
         console.log(`${pkg.name} listening on port ${config.port2}`);
     });
 }
+*/
+if (module.parent) {
+    module.exports = app;
+} else {
+    // 监听端口，启动程序
+    const port = process.env.PORT || config.port;
+    app.listen(port, function () {
+        console.log(`${pkg.name} listening on port ${port}`);
+    });
+}
+
