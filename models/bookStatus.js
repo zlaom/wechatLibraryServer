@@ -45,7 +45,7 @@ module.exports = {
     },
 
     //通过userId和bookId获得一个用户的bookStatus
-    getBookStatusByUserIdBookId: function getBookStatusByUserIdBookId(userId, bookId, type) {
+    getBookStatusByUserIdBookIdType: function getBookStatusByUserIdBookIdType(userId, bookId, type) {
         return BookStatus.findOne({userId: userId, bookId: bookId, type: type}).exec();
     }
 

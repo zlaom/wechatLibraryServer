@@ -39,21 +39,28 @@ module.exports = {
          });*/
     },
 
-    // 更新书本可借数
-    bookCanUpdate: function bookCanUpdate(num, bookId) {
-        if (num == 1) {
-            return Book.update({bookId: bookId}, {$inc: {bookCan: 1}}); // 增加可借数
-        } else if (num == 0) {
+    // 增加书本可借数一本
+    bookCanInc: function bookCanInc(bookId) {
+        return Book.update({bookId: bookId}, {$inc: {bookCan: 1}}).exec(); // 增加可借数
+/*        console.log("7777777777777777" + num);
+        if (num == 0) {
             Book.findOne({bookId: bookId}).then(function (book) {
                 if (book.bookCan != 0) {
-                    return Book.update({bookId: bookId}, {$inc: {bookCan: -1}});// 减少可借数
+                    Book.update({bookId: bookId}, {$inc: {bookCan: -1}});// 减少可借数
                 }
             });
-        }
+        }else{
+            Book.update({bookId: bookId}, {$inc: {bookCan: 1}}); // 增加可借数
+            console.log("加一2");
+        }*/
+    },
+    // 减少书本可借数一本
+    bookCanCut:function bookCanCut(bookId) {
+        return Book.update({bookId: bookId}, {$inc: {bookCan: -1}}).exec();// 减少可借数
     },
 
     // 按照搜索内容查找
-    getBookBySearch:function getBookBySearch(query) {
+    getBookBySearch: function getBookBySearch(query) {
         return Book.find(query).exec()
     }
 

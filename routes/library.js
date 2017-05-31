@@ -62,10 +62,10 @@ router.get('/bookDetail', function (req, res, next) {
             console.log(relatedBooks);
             data.relatedBooks = relatedBooks;
             // 获取是否已经预约
-            BookStatusModel.getBookStatusByUserIdBookId(userId, bookId, "reserve").then(function (obj) {
+            BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "reserve").then(function (obj) {
                 if (!obj) {
                     // 获取是否已经借阅
-                    BookStatusModel.getBookStatusByUserIdBookId(userId, bookId, "borrow").then(function (obj) {
+                    BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "borrow").then(function (obj) {
                         if (!obj) {
                             data.bookStatus = "none";
                         } else {
@@ -88,11 +88,18 @@ router.post('/bookReserve', function (req, res, next) {
     var bookId = req.fields.bookId;
     var author = "图书馆管理员";
     var type = "reserve";
+    var bookTitle = '';
+
+    var resData={
+        message:'',
+        resources:0
+    };
 
     var bookStatus = {
         bookId: bookId,
         userId: userId,
         type: type,
+        resources: 0,
         createTime: moment().toDate()
     };
     var message = {
@@ -100,38 +107,70 @@ router.post('/bookReserve', function (req, res, next) {
         author: '',
         messageData: ''
     };
-
-    // 预约信息写入数据库
-    BookStatusModel.bookStatus(bookStatus)
+    // 找到相关书籍
+    BookModel.getBookByBookId(bookId)
         .then(function (obj) {
-            // 使书本可借数减一
-            BookModel.bookCanUpdate(0, bookId);
-            // 写入预约信息
-            BookModel.getBookByBookId(bookId)
+            if (obj.bookCan > 0) {
+                bookStatus.resources = 1;
+                resData.resources=1;
+            }
+            bookTitle = obj.bookTitle;
+            // 预约信息写入
+            BookStatusModel.bookStatus(bookStatus)
                 .then(function (obj) {
+                    // 使书本可借数减一
                     message.userId = userId;
                     message.author = author;
-                    message.messageData = '您已经成功预约《' + obj.bookTitle + '》!';
+                    message.messageData = '您已经成功预约《' + bookTitle + '》!';
                     //console.log(message);
                     MessageModel.create(message);
-
-                    // 设置定时器提醒还书
-                    /* setTimeout(function () {
-                     var message = {
-                     userId: userId,
-                     author: author,
-                     messageData: '您借的《' + obj.bookTitle + '》已到期! 请尽快还书！'
-                     };
-                     console.log(message);
-                     MessageModel.create(message);
-                     }, 300000);*/
+                    if(resData.resources==1){
+                        BookModel.bookCanCut(bookId);
+                    }
+                    resData.message='success';
+                    res.send(resData);//返回成功
+                })
+                .catch(function (err) {//错误判断
+                    resData.resources=0;
+                    resData.message='预约失败！';
+                    res.send(resData);
                 });
-            res.send('success');//返回成功
-        })
-        .catch(function (err) {//错误判断
-            console.log(err);
-            res.send("预约失败！")
         });
+
+    /*// 预约信息写入数据库
+     BookStatusModel.bookStatus(bookStatus)
+     .then(function (obj) {
+     if(obj.canBorrow>0){
+     // 使书本可借数减一
+     BookModel.bookCanUpdate(0, bookId);
+     bookStatus.resources=1;
+     }
+     // 写入预约信息
+     BookModel.getBookByBookId(bookId)
+     .then(function (obj) {
+     message.userId = userId;
+     message.author = author;
+     message.messageData = '您已经成功预约《' + obj.bookTitle + '》!';
+     //console.log(message);
+     MessageModel.create(message);
+
+     // 设置定时器提醒还书
+     /!* setTimeout(function () {
+     var message = {
+     userId: userId,
+     author: author,
+     messageData: '您借的《' + obj.bookTitle + '》已到期! 请尽快还书！'
+     };
+     console.log(message);
+     MessageModel.create(message);
+     }, 300000);*!/
+     });
+     res.send('success');//返回成功
+     })
+     .catch(function (err) {//错误判断
+     console.log(err);
+     res.send("预约失败！")
+     });*/
 });
 
 // 取消预订操作
@@ -140,15 +179,54 @@ router.post('/cancelReserve', function (req, res, next) {
     var bookId = req.fields.bookId;
     var author = "图书馆管理员";
     var type = "reserve";
+    var resData={
+        message:'',
+        resources:0
+    };
 
     var message = {
         userId: '',
         author: '',
         messageData: ''
     };
+    // 找到预约状态
+    BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, type)
+        .then(function (obj) {
+            // 得到当前资源数
+            var resources = obj.resources;
+            resData.resources=resources;
+            // 删除预约信息
+            BookStatusModel.delBookStatus(userId, bookId, type)
+                .then(function (obj) {
+                    if (!obj.result.n) {//result.n为1表示有这个记录
+                        res.send("取消失败！未找到相关记录。");
+                    } else {
+                        // 使书本可借数加一
+                        if(resources==1){
+                            BookModel.bookCanInc(bookId);
+                            console.log("加一");
+                        }
+                        // 写入取消预约消息
+                        BookModel.getBookByBookId(bookId)
+                            .then(function (obj) {
+                                message.userId = userId;
+                                message.author = author;
+                                message.messageData = '您已经成功取消预约《' + obj.bookTitle + '》!';
+                                MessageModel.create(message);
+                            });
+                        resData.message='success';
+                        res.send(resData);//返回成功
+                    }
+                })
+                .catch(function (err) {//错误判断
+                    resData.message='取消失败！';
+                    res.send(resData);
+                });
+        });
+
 
     // 删除预约信息
-    BookStatusModel.delBookStatus(userId, bookId, type)
+/*    BookStatusModel.delBookStatus(userId, bookId, type)
         .then(function (obj) {
             if (!obj.result.n) {//result.n为1表示有这个记录
                 res.send("取消失败！未找到相关记录。");
@@ -168,7 +246,7 @@ router.post('/cancelReserve', function (req, res, next) {
         })
         .catch(function (err) {//错误判断
             res.send("取消失败！");
-        });
+        });*/
 });
 
 // 得到一个分类
@@ -182,7 +260,7 @@ router.get('/sortDetail', function (req, res, next) {
             for (var i = 0; i < obj.length; i++) {
                 books[i] = {
                     bookId: obj[i].bookId,
-                   // cover: 'http://localhost:3000/img/' + obj[i].bookCover,
+                    // cover: 'http://localhost:3000/img/' + obj[i].bookCover,
                     cover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
                     bookAbstract: obj[i].bookAbstract,
