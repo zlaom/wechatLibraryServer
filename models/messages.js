@@ -20,6 +20,10 @@ module.exports = {
     // 通过用户ID和messageId删除一条消息
     delMessagesByUserMessageId: function delMessagesByUserMessageId(userId, messageId) {
         return Message.remove({userId: userId, _id: messageId}).exec();
-    }
+    },
 
+    // 通过用户ID消息
+    delAllMessagesByUserMessageId: function delAllMessagesByUserMessageId(userId) {
+        return Message.remove({userId: userId}).exec();
+    }
 };

@@ -24,7 +24,6 @@ router.get('/Sorts', function (req, res, next) {
                     sortEname: obj[i].sortEname
                 };
             }
-            console.log(sorts);
             res.send(sorts);
             return next();
 
@@ -51,7 +50,7 @@ router.get('/sortDetail', function (req, res, next) {
                     canBorrow: obj[i].bookCan
                 };
             }
-            console.log(books);
+            //console.log(books);
             res.send(books);
         }
     })
@@ -99,7 +98,7 @@ router.get('/bookDetail', function (req, res, next) {
         data.book = book;
         //获得一本书的推荐书籍
         BookModel.getRelaBooksByBookId(Sorts, BookId).then(function (book1) {
-            console.log(book1);
+            //console.log(book1);
             var relatedBooks = [];
             for (var i = 0; i < book1.length; i++) {
                 relatedBooks[i] = {
@@ -109,7 +108,7 @@ router.get('/bookDetail', function (req, res, next) {
                     bookCover: book1[i].bookCover
                 };
             }
-            console.log(relatedBooks);
+            //console.log(relatedBooks);
             data.relatedBooks = relatedBooks;
             // 获取是否已经预约
             BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "reserve").then(function (obj) {

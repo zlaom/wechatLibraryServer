@@ -21,8 +21,8 @@ const credentials = {
     cert: fs.readFileSync('path/to/certificate.pem')
 };
 
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
+/*var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);*/
 
 // 设置模板目录
 app.set('views', path.join(__dirname, 'views'));
