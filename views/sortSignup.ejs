@@ -1,0 +1,24 @@
+<%- include header %>
+
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <div class="field required">
+                <label>类别</label>
+                <input placeholder="类别" type="text" name="sortName">
+            </div>
+            <div class="field required">
+                <label>类别英文缩写</label>
+                <input placeholder="类别英文缩写" type="text" name="sortEname">
+            </div>
+            <div class="field required">
+                <label>封面</label>
+                <input type="file" name="sortCover">
+            </div>
+            <input type="submit" class="ui button fluid" value="录入">
+        </form>
+    </div>
+</div>
+
+<%- include footer %>

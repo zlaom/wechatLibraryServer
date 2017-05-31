@@ -15,7 +15,6 @@ module.exports = {
         return BookStatus.remove({userId: userId, bookId: bookId, type: type}).exec();
     },
 
-    // 图书状态
     // 通过用户id得到预约的书
     getUserReserveBook: function getUserReserveBook(userId) {
         var query = {
@@ -32,6 +31,16 @@ module.exports = {
             type: 'borrow'
         };
         return BookStatus.find(query).sort({_id: -1}).exec();
+    },
+
+    // 通过用户id和图书id更新一个状态
+    updateStatusByUserBook:function updateStatusByUserBook(userId,bookId,type) {
+        return BookStatus.update({userId:userId,bookId: bookId},{$set:{type:type}}).exec();
+    },
+
+    // 通过用户id和图书id更新获得资源数
+    updateStatusResourcesByUserBookType:function updateStatusResourcesByUserBookType(userId,bookId,type,resources) {
+        return BookStatus.update({userId:userId,bookId: bookId,type:type},{$set:{resources:resources}}).exec();
     },
 
     // 获得一段时间的书本状态

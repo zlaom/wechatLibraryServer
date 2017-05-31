@@ -9,8 +9,11 @@ module.exports = function (app) {
   app.use('/library', require('./library'));
   app.use('/personal', require('./personal'));
   app.use('/search',require('./search'));
+  app.use('/sortSignup', require('./sortSignup'));
 
-  // 404 page
+
+
+    // 404 page
   app.use(function (req, res) {
     if (!res.headersSent) {
       res.status(404).render('404');

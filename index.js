@@ -8,11 +8,11 @@ var routes = require('./routes');
 var pkg = require('./package');
 var winston = require('winston');
 var expressWinston = require('express-winston');
-/*var cycle = require('./public/js/cycle');*/
 var http = require('http');
 var https = require('https');
 var io = require('socket.io')(http);
 const fs = require('fs');
+/*var cycle = require('./public/js/cycle');*/
 
 var app = express();
 

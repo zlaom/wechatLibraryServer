@@ -6,7 +6,57 @@ var router = express.Router();
 var BookModel = require('../models/books');// 书籍模型
 var BookStatusModel = require('../models/bookStatus');// 书籍状态模型
 var MessageModel = require('../models/messages');// 消息模型
+var SortModel = require('../models/sorts');// 类型模型
 var moment = require('moment');
+
+// 获得所有分类
+router.get('/Sorts', function (req, res, next) {
+    SortModel.showSorts().then(function (obj) {
+        if (!obj) {
+            console.log("error :" + error);
+        } else {
+            var sorts = [];
+            for (var i = 0; i < obj.length; i++) {
+                sorts[i] = {
+                    cover: 'http://localhost:3000/img/' + obj[i].sortCover,
+                    sortName: obj[i].sortName,
+                    num: obj[i].sortBkNum,
+                    sortEname: obj[i].sortEname
+                };
+            }
+            console.log(sorts);
+            res.send(sorts);
+            return next();
+
+        }
+    });
+});
+
+// 得到一个分类
+router.get('/sortDetail', function (req, res, next) {
+    var sort = req.query.bookSort;
+    BookModel.getBooksByBookSort(sort).then(function (obj) {
+        if (!obj) {
+            console.log('查找:' + query + ',未找到结果!');
+        } else {
+            var books = [];
+            for (var i = 0; i < obj.length; i++) {
+                books[i] = {
+                    bookId: obj[i].bookId,
+                    // cover: 'http://localhost:3000/img/' + obj[i].bookCover,
+                    cover: obj[i].bookCover,
+                    bookName: obj[i].bookTitle,
+                    bookAbstract: obj[i].bookAbstract,
+                    bookNum: obj[i].bookNum,
+                    canBorrow: obj[i].bookCan
+                };
+            }
+            console.log(books);
+            res.send(books);
+        }
+    })
+});
+
 // 书籍详情页面
 router.get('/bookDetail', function (req, res, next) {
     var userId = req.query.userId;
@@ -90,9 +140,9 @@ router.post('/bookReserve', function (req, res, next) {
     var type = "reserve";
     var bookTitle = '';
 
-    var resData={
-        message:'',
-        resources:0
+    var resData = {
+        message: '',
+        resources: 0
     };
 
     var bookStatus = {
@@ -112,7 +162,7 @@ router.post('/bookReserve', function (req, res, next) {
         .then(function (obj) {
             if (obj.bookCan > 0) {
                 bookStatus.resources = 1;
-                resData.resources=1;
+                resData.resources = 1;
             }
             bookTitle = obj.bookTitle;
             // 预约信息写入
@@ -124,53 +174,18 @@ router.post('/bookReserve', function (req, res, next) {
                     message.messageData = '您已经成功预约《' + bookTitle + '》!';
                     //console.log(message);
                     MessageModel.create(message);
-                    if(resData.resources==1){
+                    if (resData.resources == 1) {
                         BookModel.bookCanCut(bookId);
                     }
-                    resData.message='success';
+                    resData.message = 'success';
                     res.send(resData);//返回成功
                 })
                 .catch(function (err) {//错误判断
-                    resData.resources=0;
-                    resData.message='预约失败！';
+                    resData.resources = 0;
+                    resData.message = '预约失败！';
                     res.send(resData);
                 });
         });
-
-    /*// 预约信息写入数据库
-     BookStatusModel.bookStatus(bookStatus)
-     .then(function (obj) {
-     if(obj.canBorrow>0){
-     // 使书本可借数减一
-     BookModel.bookCanUpdate(0, bookId);
-     bookStatus.resources=1;
-     }
-     // 写入预约信息
-     BookModel.getBookByBookId(bookId)
-     .then(function (obj) {
-     message.userId = userId;
-     message.author = author;
-     message.messageData = '您已经成功预约《' + obj.bookTitle + '》!';
-     //console.log(message);
-     MessageModel.create(message);
-
-     // 设置定时器提醒还书
-     /!* setTimeout(function () {
-     var message = {
-     userId: userId,
-     author: author,
-     messageData: '您借的《' + obj.bookTitle + '》已到期! 请尽快还书！'
-     };
-     console.log(message);
-     MessageModel.create(message);
-     }, 300000);*!/
-     });
-     res.send('success');//返回成功
-     })
-     .catch(function (err) {//错误判断
-     console.log(err);
-     res.send("预约失败！")
-     });*/
 });
 
 // 取消预订操作
@@ -179,9 +194,9 @@ router.post('/cancelReserve', function (req, res, next) {
     var bookId = req.fields.bookId;
     var author = "图书馆管理员";
     var type = "reserve";
-    var resData={
-        message:'',
-        resources:0
+    var resData = {
+        message: '',
+        resources: 0
     };
 
     var message = {
@@ -189,90 +204,53 @@ router.post('/cancelReserve', function (req, res, next) {
         author: '',
         messageData: ''
     };
+
     // 找到预约状态
     BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, type)
         .then(function (obj) {
             // 得到当前资源数
             var resources = obj.resources;
-            resData.resources=resources;
-            // 删除预约信息
-            BookStatusModel.delBookStatus(userId, bookId, type)
+            resData.resources = resources;
+            // 更新预约信息为取消预约
+            type = "cancelRe";
+            BookStatusModel.updateStatusByUserBook(userId, bookId, type)
                 .then(function (obj) {
                     if (!obj.result.n) {//result.n为1表示有这个记录
                         res.send("取消失败！未找到相关记录。");
                     } else {
                         // 使书本可借数加一
-                        if(resources==1){
+                        if (resources == 1) {
                             BookModel.bookCanInc(bookId);
                             console.log("加一");
                         }
+
+                        // 资源数清零
+                        BookStatusModel.updateStatusResourcesByUserBookType(userId, bookId, type, 0);
+
                         // 写入取消预约消息
                         BookModel.getBookByBookId(bookId)
                             .then(function (obj) {
                                 message.userId = userId;
                                 message.author = author;
                                 message.messageData = '您已经成功取消预约《' + obj.bookTitle + '》!';
+                                // 新建消息
                                 MessageModel.create(message);
                             });
-                        resData.message='success';
+                        resData.message = 'success';
                         res.send(resData);//返回成功
                     }
                 })
                 .catch(function (err) {//错误判断
-                    resData.message='取消失败！';
+                    resData.message = '取消失败！';
                     res.send(resData);
                 });
         });
-
-
-    // 删除预约信息
-/*    BookStatusModel.delBookStatus(userId, bookId, type)
-        .then(function (obj) {
-            if (!obj.result.n) {//result.n为1表示有这个记录
-                res.send("取消失败！未找到相关记录。");
-            } else {
-                // 使书本可借数加一
-                BookModel.bookCanUpdate(1, bookId);
-                // 写入取消预约消息
-                BookModel.getBookByBookId(bookId)
-                    .then(function (obj) {
-                        message.userId = userId;
-                        message.author = author;
-                        message.messageData = '您已经成功取消预约《' + obj.bookTitle + '》!';
-                        MessageModel.create(message);
-                    });
-                res.send('success');//返回成功
-            }
-        })
-        .catch(function (err) {//错误判断
-            res.send("取消失败！");
-        });*/
 });
 
-// 得到一个分类
-router.get('/sortDetail', function (req, res, next) {
-    var sort = req.query.bookSort;
-    BookModel.getBooksByBookSort(sort).then(function (obj) {
-        if (!obj) {
-            console.log('查找:' + query + ',未找到结果!');
-        } else {
-            var books = [];
-            for (var i = 0; i < obj.length; i++) {
-                books[i] = {
-                    bookId: obj[i].bookId,
-                    // cover: 'http://localhost:3000/img/' + obj[i].bookCover,
-                    cover: obj[i].bookCover,
-                    bookName: obj[i].bookTitle,
-                    bookAbstract: obj[i].bookAbstract,
-                    bookNum: obj[i].bookNum,
-                    canBorrow: obj[i].bookCan
-                };
-            }
-            console.log(books);
-            res.send(books);
-        }
-    })
-});
+// 借书操作
+
+
+// 还书操作
 
 module.exports = router;
 

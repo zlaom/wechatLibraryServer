@@ -6,15 +6,14 @@
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
-
 var router = express.Router();
-
 var BookModel = require('../models/books');
+var SortModel = require('../models/sorts');
 
 //GET书籍录入页面
 router.get('/', function (req, res, next) {
     console.log('bookGet');
-    res.render('bookSignup');
+    res.render('bookSignUp');
 });
 
 // POST书籍录入路由library/bookSignup
@@ -32,45 +31,49 @@ router.post('/', function (req, res, next) {
     var bookSorts = [];
     var bookCan = bookNum;
     var bookBowNum = '0';
-
     // 根据checkbox判断并写入bookSorts
     var i = 0;
-    if (req.fields.english) {
-        bookSorts[i] = 'e';// 英语
+    var bookNum = req.fields.bookNum;
+    var bookSort1 = req.fields.bookSort1;
+    var bookSort2 = req.fields.bookSort2;
+    var bookSort3 = req.fields.bookSort3;
+    if (bookSort1) {
+        bookSorts[i] = bookSort1;
+        console.log(SortModel.getSortByBookSort(bookSort1));
+        for (var j = 0; j < bookNum; j++)
+            SortModel.updateSortBkNumBySortEname(bookSort1);
         i++;
     }
-    if (req.fields.computer) {
-        bookSorts[i]= 'c';// 计算机
+    if (bookSort2) {
+        bookSorts[i] = bookSort2;
+        console.log(SortModel.getSortByBookSort(bookSort2));
+        for (var j = 0; j < bookNum; j++)
+            SortModel.updateSortBkNumBySortEname(bookSort2);
         i++;
     }
-    if (req.fields.science) {
-        bookSorts[i]= 's';// 科学
+    if (bookSort3) {
+        bookSorts[i] = bookSort3;
+        console.log(SortModel.getSortByBookSort(bookSort3));
+        for (var j = 0; j < bookNum; j++)
+            SortModel.updateSortBkNumBySortEname(bookSort3);
         i++;
     }
-    if (req.fields.history) {
-        bookSorts[i] =  'h';// 历史
-        i++;
-    }
-    if (req.fields.literature) {
-        bookSorts[i] = 'l';// 文化
-        i=0;
-    }
-
     //模板赋值
-    var book={
+    var book = {
         bookId: bookId,
-        bookTitle : bookTitle,
-        bookCover : bookCover,
-        bookAuthor : bookAuthor,
-        bookPress : bookPress,
-        bookSorts : bookSorts,
-        bookAbstract : bookAbstract ,
-        bookNum : parseInt(bookNum),
-        bookCan : parseInt(bookCan),
+        bookTitle: bookTitle,
+        bookCover: bookCover,
+        bookAuthor: bookAuthor,
+        bookPress: bookPress,
+        bookSorts: bookSorts,
+        bookAbstract: bookAbstract,
+        bookNum: parseInt(bookNum),
+        bookCan: parseInt(bookCan),
         bookBowNum: parseInt(bookBowNum)
     };
 
-    BookModel.create(book);//书籍录入记得写纠错
+    BookModel.create(book);//书籍录入
+    // 记得写纠错
     console.log(book);//打印模板
     res.send();
 });

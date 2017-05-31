@@ -1,3 +1,57 @@
+<%- include header%>
+
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <div class="field required">
+                <label>条形码</label>
+                <input placeholder="条形码" type="text" name="bookId">
+            </div>
+            <div class="field required">
+                <label>书名</label>
+                <input placeholder="书名" type="text" name="bookTitle">
+            </div>
+            <div class="field required">
+                <label>封面</label>
+                <input type="file" name="bookCover">
+            </div>
+            <div class="field required">
+                <label>作者</label>
+                <input placeholder="作者" type="text" name="bookAuthor">
+            </div>
+            <div class="field required">
+                <label>出版社</label>
+                <input placeholder="出版社" type="text" name="bookPress">
+            </div>
+            <div class="field required">
+                <label>分类1（请输入英文分类）</label>
+                <input placeholder="分类" type="text" name="bookSort1">
+            </div>
+            <div class="field required">
+                <label>分类2（请输入英文分类）</label>
+                <input placeholder="分类" type="text" name="bookSort2">
+            </div>
+            <div class="field required">
+                <label>分类3（请输入英文分类）</label>
+                <input placeholder="分类" type="text" name="bookSort3">
+            </div>
+            <div class="field required">
+                <label>书本数</label>
+                <input placeholder="书本数" type="number" name="bookNum">
+            </div>
+            <div class="field required">
+                <label>简介</label>
+                <textarea name="bookAbstract" rows="5"></textarea>
+            </div>
+            <input type="submit" class="ui button fluid" value="录入">
+        </form>
+    </div>
+</div>
+
+<%- include footer %>
+
+<!--
 <%- include('header') %>
 
 <div class="ui grid">
@@ -67,3 +121,4 @@
 </div>
 
 <%- include('footer') %>
+-->
