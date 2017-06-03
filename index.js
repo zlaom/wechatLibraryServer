@@ -12,6 +12,7 @@ var http = require('http');
 var https = require('https');
 var io = require('socket.io')(http);
 const fs = require('fs');
+// 轮询消息提醒机制
 /*var cycle = require('./public/js/cycle');*/
 
 var app = express();

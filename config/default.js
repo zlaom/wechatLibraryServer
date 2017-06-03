@@ -1,4 +1,5 @@
 module.exports = {
+    // 监听端口号
     port:3000,
 /*    port1: 3000,//http
     port2: 3001,//https*/
@@ -7,5 +8,6 @@ module.exports = {
         key: 'library',
         maxAge: 2592000000
     },
+    //  mongodb连接地址
     mongodb: 'mongodb://localhost:27017/library'
 };

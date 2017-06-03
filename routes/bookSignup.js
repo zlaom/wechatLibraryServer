@@ -12,7 +12,6 @@ var SortModel = require('../models/sorts');
 
 //GET书籍录入页面
 router.get('/', function (req, res, next) {
-    console.log('bookGet');
     res.render('bookSignUp');
 });
 
@@ -31,6 +30,7 @@ router.post('/', function (req, res, next) {
     var bookSorts = [];
     var bookCan = bookNum;
     var bookBowNum = '0';
+
     // 根据checkbox判断并写入bookSorts
     var i = 0;
     var bookNum = req.fields.bookNum;
@@ -58,6 +58,7 @@ router.post('/', function (req, res, next) {
             SortModel.updateSortBkNumBySortEname(bookSort3);
         i++;
     }
+
     //模板赋值
     var book = {
         bookId: bookId,
@@ -72,9 +73,10 @@ router.post('/', function (req, res, next) {
         bookBowNum: parseInt(bookBowNum)
     };
 
-    BookModel.create(book);//书籍录入
-    // 记得写纠错
-    console.log(book);//打印模板
+    //书籍录入
+    BookModel.create(book);// 记得写纠错
+
+    // 数据发送
     res.send();
 });
 

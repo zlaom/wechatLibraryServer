@@ -1,8 +1,11 @@
-module.exports = function (app) {
-  app.get('/', function (req, res) {
-    res.redirect('/posts');
-  });
 
+module.exports = function (app) {
+
+/*  app.get('/', function (req, res) {
+    res.redirect('/posts');
+  });*/
+
+  // 设置页面路由
   app.use('/signup', require('./signup'));
   app.use('/signin', require('./signin'));
   app.use('/bookSignup', require('./bookSignup'));
@@ -11,9 +14,7 @@ module.exports = function (app) {
   app.use('/search',require('./search'));
   app.use('/sortSignup', require('./sortSignup'));
 
-
-
-    // 404 page
+  // 404 page
   app.use(function (req, res) {
     if (!res.headersSent) {
       res.status(404).render('404');
