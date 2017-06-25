@@ -56,6 +56,36 @@ module.exports = {
     //通过userId和bookId获得一个用户的bookStatus
     getBookStatusByUserIdBookIdType: function getBookStatusByUserIdBookIdType(userId, bookId, type) {
         return BookStatus.findOne({userId: userId, bookId: bookId, type: type}).exec();
+    },
+
+    // 通过bookId删除状态记录
+    delBookStatusByBookId:function  delBookStatusByBookId(bookId){
+        return BookStatus.remove({bookId:bookId}).exec();
+    },
+    // 通过userId删除状态记录
+    delBookStatusByUserId:function  delBookStatusByUserId(Id){
+        return BookStatus.remove({userId:Id}).exec();
+    },
+    // 通过statusId删除状态记录
+    delBookStatusByStatusId:function   delBookStatusByStatusId(Id){
+        return BookStatus.remove({_id:Id}).exec();
+    },
+    //通过用户ID获取状态记录
+    getBookStatusByUserId: function getBookStatusByUserId(userId){
+        return BookStatus.find({userId:userId})
+            .addCreatedAt()
+            .sort({_id:-1})
+            .exec();
+    },
+
+    // 通过id获取状态
+    getBookStatusByStatusId: function getBookStatusByStatusId(id){
+        return BookStatus.findOne({_id:id}).exec();
+    },
+
+    // 根据id更改状态
+    updateStatusById:function updateStatusById(id,data){
+        return BookStatus.update({ _id: id}, { $set: data }).exec();
     }
 
 };

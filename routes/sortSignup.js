@@ -10,17 +10,15 @@ var express = require('express');
 var router = express.Router();
 
 var SortModel = require('../models/sorts');
-
+var checkLogin = require('../middlewares/check').checkLogin;
 //GET书籍录入页面
-router.get('/', function (req, res, next) {
+router.get('/',checkLogin, function (req, res, next) {
     console.log('sortGet');
     res.render('sortSignUp');
 });
 
 // POST书籍录入路由library/bookSignup
-router.post('/', function (req, res, next) {
-    console.log(req);
-    console.log('sortPost');
+router.post('/',checkLogin, function (req, res, next) {
     // 获取变量值
     var sortName=req.fields.sortName;
     var sortEname=req.fields.sortEname;
@@ -35,8 +33,7 @@ router.post('/', function (req, res, next) {
     };
 
     SortModel.create(sort);//籍录入记得写纠错书
-    console.log(sort);//打印模板
-    res.send(sort);
+    res.redirect('/sorts');
 });
 
 module.exports = router;

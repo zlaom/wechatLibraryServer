@@ -43,9 +43,9 @@ router.get('/sortDetail', function (req, res, next) {
             for (var i = 0; i < obj.length; i++) {
                 books[i] = {
                     bookId: obj[i].bookId,
-                    // cover: 'http://localhost:3000/img/' + obj[i].bookCover,
                     cover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
+                    bookAuthor:obj[i].bookAuthor,
                     bookAbstract: obj[i].bookAbstract,
                     bookNum: obj[i].bookNum,
                     canBorrow: obj[i].bookCan
@@ -114,13 +114,16 @@ router.get('/bookDetail', function (req, res, next) {
                 };
             }
             data.relatedBooks = relatedBooks;
-
+            console.log(userId+' '+bookId);
             // 判断当前书籍是否已经预约
+            console.log('判断当前书籍是否已经预约');
             BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "reserve").then(function (obj) {
                 if (!obj) {
                     // 不是预订书籍，开始判断当前书籍是否已经借阅
+                    console.log('不是预订书籍，开始判断当前书籍是否已经借阅');
                     BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "borrow").then(function (obj) {
                         if (!obj) {
+                            console.log('不是借阅书籍，开始判断当前书籍是否已经借阅');
                             data.bookStatus = "none";
                         } else {
                             data.bookStatus = "borrow";
@@ -142,6 +145,7 @@ router.get('/bookDetail', function (req, res, next) {
 
 // 书籍预订操作
 router.post('/bookReserve', function (req, res, next) {
+    console.log("预订");
     // 参数获取及初始化
     var userId = req.fields.userId;
     var bookId = req.fields.bookId;
@@ -171,6 +175,7 @@ router.post('/bookReserve', function (req, res, next) {
     // 找到相关书籍
     BookModel.getBookByBookId(bookId)
         .then(function (obj) {
+            console.log(obj);
             // 判断当前书籍是否还有可借数，有则给状态分配资源并把resources标志位置1
             if (obj.bookCan > 0) {
                 bookStatus.resources = 1;
@@ -195,11 +200,13 @@ router.post('/bookReserve', function (req, res, next) {
                     resData.message = 'success';
                     console.log(resData);
                     res.send(resData);// 发送数据
+                    console.log('发送成功！');
                 })
                 .catch(function (err) {// 错误判断
                     resData.resources = 0;
                     resData.message = '预约失败！';
                     res.send(resData);// 发送数据
+                    console.log('发送失败！');
                 });
         });
 });

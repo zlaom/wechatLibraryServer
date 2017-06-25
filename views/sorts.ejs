@@ -1,0 +1,12 @@
+<%- include('header') %>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>类别管理</h3>
+    </div>
+</div>
+<% sorts.forEach(function (sort) { %>
+<%- include('components/sort-content', { sort: sort }) %>
+<% }) %>
+
+<%- include('footer') %>

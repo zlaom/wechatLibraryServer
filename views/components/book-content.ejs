@@ -1,0 +1,37 @@
+<div class="post-content">
+    <div class="ui grid">
+        <div class="four wide column">
+        </div>
+        <div class="eight wide column">
+            <div class="four wide column"></div>
+            <div class="four wide column">
+                <div class="ui segment">
+                  <div class="ui grid">
+                    <div class="four wide column">
+                      <img src="http://localhost:3000/img/<%= book.bookCover %>" width="100px"/>
+                    </div>
+                    <div class="eight wide column">
+                      <h3><a href="/books/<%= book.bookId %>/bookEdit"><%= book.bookTitle %></a></h3>
+                      <p>作者：<%= book.bookAuthor %><p>
+                      <p>出版社：<%= book.bookPress %><p>
+                      <p>条形码：<%= book.bookId %><p>
+                    </div>
+                  </div>
+                  <div>
+                      <span class="tag"><%= book.created_at %></span>
+                      <span class="tag right">
+                         <div class="ui inline dropdown">
+                           <div class="text"></div>
+                           <i class="dropdown icon"></i>
+                           <div class="menu">
+                             <div class="item"><a href="/books/<%= book.bookId %>/bookEdit">编辑</a></div>
+                             <div class="item"><a href="/books/<%= book.bookId %>/remove">删除</a></div>
+                           </div>
+                         </div>
+                      </span>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,12 +2,22 @@
  * Created by 14798 on 2017/4/13.
  */
 var Book = require('../lib/mongo').Book;
-var BookStatus = require('../lib/mongo').BookStatus;
-
+var BookStatus = require('./bookStatus');
+var config = require('config-lite');
 module.exports = {
     // 注册一本书
     create: function create(book) {
         return Book.create(book).exec();
+    },
+
+    // 获得所有书
+    getBooks: function getBooks() {
+
+        return Book
+            .find()
+            .sort({_id: -1})
+            .addCreatedAt()
+            .exec();
     },
 
     // 通过bookId查找一本书
@@ -21,6 +31,10 @@ module.exports = {
     // 通过分类查找一类书
     getBooksByBookSort: function getBooksByBookSort(sorts) {
         return Book.find({bookSorts: sorts}).exec();
+    },
+
+    getRecommendBooksByBookSort: function getBooksByBookSort(sorts) {
+        return Book.find({bookSorts: {$in:sorts}}).limit(config.recommendNum).exec();
     },
 
     // 查找一个分类
@@ -39,12 +53,30 @@ module.exports = {
     },
 
     // 减少书本可借数一本
-    bookCanCut:function bookCanCut(bookId) {
+    bookCanCut: function bookCanCut(bookId) {
         return Book.update({bookId: bookId}, {$inc: {bookCan: -1}}).exec();// 减少可借数
     },
 
     // 按照搜索内容查找
     getBookBySearch: function getBookBySearch(query) {
         return Book.find(query).exec()
+    },
+
+    // 通过bookId删除一本书
+    delBookById: function delBookById(bookId) {
+        return Book.remove({bookId:bookId}).exec().then(function (res) {
+            // 删除对应的书籍状态记录
+            if (res.result.ok && res.result.n > 0) {
+                return BookStatus.delBookStatusByBookId(bookId);
+            }
+        });
+    },
+
+    // 通过bookId更新数据
+    updateBookById: function updateBookById(bookId,data){
+        return Book.update({ bookId: bookId}, { $set: data }).exec();
     }
+
+
+
 };

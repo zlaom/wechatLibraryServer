@@ -1,0 +1,38 @@
+<%- include('header') %>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>用户信息</h3>
+    </div>
+</div>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <div class="field">
+                <label>用户名</label>
+                <p><%= user.userId %></p>
+            </div>
+            <div class="field required">
+                <label>电话</label>
+                <input placeholder="书名" type="text" name="phone" value="<%= user.phone %>">
+            </div>
+            <div class="field required">
+                <label>身份证</label>
+                <input placeholder="作者" type="text" name="idCard" value="<%= user.idCard %>">
+            </div>
+            <input type="submit" class="ui button fluid" value="修改">
+        </form>
+    </div>
+</div>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>状态记录</h3>
+    </div>
+</div>
+<% bstatus.forEach(function (status) { %>
+<%- include('components/status-content', { bstatus: status }) %>
+<% }) %>
+
+<%- include('footer') %>

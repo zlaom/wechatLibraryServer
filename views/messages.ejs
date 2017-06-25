@@ -1,0 +1,12 @@
+<%- include('header') %>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>消息管理</h3>
+    </div>
+</div>
+<% messages.forEach(function (message) { %>
+<%- include('components/message-content', { message: message }) %>
+<% }) %>
+
+<%- include('footer') %>

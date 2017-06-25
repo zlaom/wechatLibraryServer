@@ -1,5 +1,10 @@
 <%- include header%>
-
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>书籍注册</h3>
+    </div>
+</div>
 <div class="ui grid">
     <div class="four wide column"></div>
     <div class="eight wide column">
@@ -50,75 +55,3 @@
 </div>
 
 <%- include footer %>
-
-<!--
-<%- include('header') %>
-
-<div class="ui grid">
-    <div class="four wide column"></div>
-    <div class="eight wide column">
-        <form class="ui form segment" method="post" enctype="multipart/form-data">
-            <div class="field required">
-                <label>条形码</label>
-                <input placeholder="条形码" type="text" name="bookId">
-            </div>
-            <div class="field required">
-                <label>书名</label>
-                <input placeholder="书名" type="text" name="bookTitle">
-            </div>
-            <div class="field required">
-                <label>封面</label>
-                <input type="file" name="bookCover">
-            </div>
-            <div class="field required">
-                <label>作者</label>
-                <input placeholder="作者" type="text" name="bookAuthor">
-            </div>
-            <div class="field required">
-                <label>出版社</label>
-                <input placeholder="出版社" type="text" name="bookPress">
-            </div>
-            <div class="field">
-                <label class="required">分类</label>
-                <div name="bookSort">
-                    <div class="ui checkbox">
-                        <input type="checkbox" name="english">
-                        <label>英文</label>
-                    </div>
-                    </br>
-                    <div class="ui checkbox">
-                        <input type="checkbox" name="computer">
-                        <label>计算机</label>
-                    </div>
-                    </br>
-                    <div class="ui checkbox">
-                        <input type="checkbox" name="science">
-                        <label>科学</label>
-                    </div>
-                    </br>
-                    <div class="ui checkbox">
-                        <input type="checkbox" name="history">
-                        <label>历史</label>
-                    </div>
-                    </br>
-                    <div class="ui checkbox">
-                        <input type="checkbox" name="literature">
-                        <label>文学</label>
-                    </div>
-                </div>
-            </div>
-            <div class="field required">
-                <label>书本数</label>
-                <input placeholder="书本数" type="number" name="bookNum">
-            </div>
-            <div class="field required">
-                <label>简介</label>
-                <textarea name="bookAbstract" rows="5"></textarea>
-            </div>
-            <input type="submit" class="ui button fluid" value="录入">
-    </form>
-    </div>
-</div>
-
-<%- include('footer') %>
--->

@@ -28,8 +28,9 @@ router.get('/',function (req,res,next) {
                     for (var i = 0; i < obj.length; i++) {
                         data[i] = {
                             id: obj[i].bookId,
-                            cover: 'http://localhost:3000/img/'+obj[i].bookCover,
+                            cover: obj[i].bookCover,
                             bookName: obj[i].bookTitle,
+                            bookAuthor:obj[i].bookAuthor,
                             bookAbstract: obj[i].bookAbstract,
                             bookNum: obj[i].bookNum,
                             canBorrow: obj[i].bookCan
@@ -45,8 +46,9 @@ router.get('/',function (req,res,next) {
             for(var i=0;i<obj.length;i++){
                 data[i]={
                     id:obj[i].bookId,
-                    cover: 'http://localhost:3000/img/'+obj[i].bookCover,
+                    cover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
+                    bookAuthor:obj[i].bookAuthor,
                     bookAbstract: obj[i].bookAbstract,
                     bookNum: obj[i].bookNum,
                     canBorrow: obj[i].bookCan

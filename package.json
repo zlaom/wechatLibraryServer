@@ -1,7 +1,7 @@
 {
-  "name": "library",
+  "name": "library management",
   "version": "1.0.0",
-  "description": "my first blog",
+  "description": "a wechat library management platforrm",
   "main": "index.js",
   "scripts": {
     "test": "node --harmony ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",

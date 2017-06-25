@@ -1,0 +1,12 @@
+<%- include('header') %>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>书籍管理</h3>
+    </div>
+</div>
+<% books.forEach(function (book) { %>
+<%- include('components/book-content', { book: book }) %>
+<% }) %>
+
+<%- include('footer') %>

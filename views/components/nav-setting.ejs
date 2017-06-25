@@ -4,13 +4,17 @@
       <i class="icon bars"></i>
       <div class="menu">
         <% if (user) { %>
-          <a class="item" href="/posts?author=<%= user._id %>">个人主页</a>
+          <a class="item" href="/books">书籍管理</a>
+          <a class="item" href="/sorts">类别管理</a>
+          <a class="item" href="/users">用户管理</a>
+         <!-- <a class="item" href="/messages">消息管理</a>-->
+          <a class="item" href="/bookSignup">书籍注册</a>
+          <a class="item" href="/sortSignup">类别注册</a>
           <div class="divider"></div>
-          <a class="item" href="/posts/create">发表文章</a>
           <a class="item" href="/signout">登出</a>
         <% } else { %>
           <a class="item" href="/signin">登录</a>
-          <a class="item" href="/signup">注册</a>
+          <a class="item" href="/managerSignup">注册</a>
         <% } %>
       </div>
     </div>

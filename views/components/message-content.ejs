@@ -1,0 +1,25 @@
+<div class="post-content">
+    <div class="ui grid">
+        <div class="four wide column"></div>
+        <div class="eight wide column">
+            <div class="ui segment">
+                <h3><a href="/users/<%= message.userId %>/edit"><%= message.userId %></a></h3>
+                <p>发布者：<%= message.author %><p>
+                <p>内容：<%= message.messageData %><p>
+                <div>
+                    <span class="tag"></span>
+                    <span class="tag right">
+                      <div class="ui inline dropdown">
+                        <div class="text"></div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                          <div class="item"><a href="/users/<%= message._id %>/edit">编辑</a></div>
+                          <div class="item"><a href="/users/<%= message._id %>/remove">删除</a></div>
+                        </div>
+                      </div>
+                  </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

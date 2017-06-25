@@ -9,5 +9,8 @@ module.exports = {
         maxAge: 2592000000
     },
     //  mongodb连接地址
-    mongodb: 'mongodb://localhost:27017/library'
+    mongodb: 'mongodb://localhost:27017/library',
+    // 推荐设置
+    defaultRecommendSorts:['h'],
+    recommendNum:5
 };

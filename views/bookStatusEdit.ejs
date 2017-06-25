@@ -1,0 +1,32 @@
+<%- include('header') %>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <h3>状态信息</h3>
+    </div>
+</div>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <div class="field">
+                <label>用户</label>
+                <p><%= bstatus.userId %></p>
+            </div>
+            <div class="field">
+                <label>创建时间</label>
+                <p><%= bstatus.createTime %></p>
+            </div>
+            <div class="field required">
+                <label>条形码值</label>
+                <input type="text" name="bookId" value="<%= bstatus.bookId %>">
+            </div>
+            <div class="field required">
+                <label>状态类型[reserve/borrow/cancelRe]</label>
+                <input  type="text" name="type" value="<%= bstatus.type %>">
+            </div>
+            <input type="submit" class="ui button fluid" value="修改">
+        </form>
+    </div>
+</div>
+<%- include footer %>

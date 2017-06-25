@@ -1,0 +1,34 @@
+<div class="post-content">
+    <div class="ui grid">
+        <div class="four wide column">
+        </div>
+
+        <div class="eight wide column">
+            <div class="ui segment">
+              <div class="ui grid">
+                <div class="four wide column">
+                  <img src="http://localhost:3000/img/<%= sort.sortCover %>" width="100px"/>
+                </div>
+                <div class="eight wide column">
+                  <h3><a href="/sorts/<%= sort._id %>/sortEdit"><%= sort.sortName %>类</a></h3>
+                  <p>英文名称：<%= sort.sortEname %><p>
+                  <p>书本数量：<%= sort.sortBkNum %><p>
+                </div>
+              </div>
+              <div>
+                  <span class="tag"><%= sort.created_at %></span>
+                  <span class="tag right">
+                    <div class="ui inline dropdown">
+                      <div class="text"></div>
+                      <i class="dropdown icon"></i>
+                      <div class="menu">
+                        <div class="item"><a href="/sorts/<%= sort._id %>/sortEdit">编辑</a></div>
+                        <div class="item"><a href="/sorts/<%= sort._id %>/remove">删除</a></div>
+                      </div>
+                    </div>
+                </span>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
