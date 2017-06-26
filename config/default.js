@@ -1,6 +1,6 @@
 module.exports = {
     // 监听端口号
-    port:3000,
+    port:80,
 /*    port1: 3000,//http
     port2: 3001,//https*/
     session: {
