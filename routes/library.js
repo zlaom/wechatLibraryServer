@@ -185,7 +185,6 @@ router.post('/bookReserve', function (req, res, next) {
 
             BookStatusModel.bookStatus(bookStatus)
                 .then(function (obj) {
-                    console.log("666666666666666666");
                     console.log(obj.ops[0]._id);
                     resData.statusId = obj.ops[0]._id; // 获取当前生成的bookstatus的_id
                     message.userId = userId;

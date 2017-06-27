@@ -23,7 +23,7 @@ const credentials = {
 };
 
 /*var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);*/
+ var httpsServer = https.createServer(credentials, app);*/
 
 // 设置模板目录
 app.set('views', path.join(__dirname, 'views'));
@@ -71,18 +71,18 @@ app.use(function (req, res, next) {
     next();
 });
 
-/*// 正常请求的日志
- app.use(expressWinston.logger({
- transports: [
- new (winston.transports.Console)({
- json: true,
- colorize: true
- }),
- new winston.transports.File({
- filename: 'logs/success.log'
- })
- ]
- }));*/
+// 正常请求的日志
+app.use(expressWinston.logger({
+    transports: [
+        new (winston.transports.Console)({
+            json: true,
+            colorize: true
+        }),
+        new winston.transports.File({
+            filename: 'logs/success.log'
+        })
+    ]
+}));
 
 // 路由
 routes(app);
@@ -108,18 +108,18 @@ app.use(function (err, req, res, next) {
 });
 
 /*
-if (module.parent) {
-    module.exports = app;
-} else {
-    // 监听端口，启动程序
-    httpServer.listen(config.port1, function () {
-        console.log(`${pkg.name} listening on port ${config.port1}`);
-    });
-    httpsServer.listen(config.port2, function () {
-        console.log(`${pkg.name} listening on port ${config.port2}`);
-    });
-}
-*/
+ if (module.parent) {
+ module.exports = app;
+ } else {
+ // 监听端口，启动程序
+ httpServer.listen(config.port1, function () {
+ console.log(`${pkg.name} listening on port ${config.port1}`);
+ });
+ httpsServer.listen(config.port2, function () {
+ console.log(`${pkg.name} listening on port ${config.port2}`);
+ });
+ }
+ */
 if (module.parent) {
     module.exports = app;
 } else {

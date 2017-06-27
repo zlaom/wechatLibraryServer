@@ -1,5 +1,5 @@
 {
-  "name": "library management",
+  "name": "library_management",
   "version": "1.0.0",
   "description": "a wechat library management platforrm",
   "main": "index.js",

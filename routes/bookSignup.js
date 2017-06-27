@@ -13,7 +13,7 @@ var checkLogin = require('../middlewares/check').checkLogin;
 
 //GET书籍录入页面
 router.get('/',checkLogin  , function (req, res, next) {
-    res.render('bookSignUp');
+    res.render('bookSignup');
 });
 
 // POST书籍录入路由library/bookSignup

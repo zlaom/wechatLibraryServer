@@ -1,9 +1,5 @@
 module.exports = function (app) {
 
-    /*  app.get('/', function (req, res) {
-     res.redirect('/posts');
-     });*/
-
     // 设置页面路由
     app.use('/signup', require('./signup'));
     app.use('/signin', require('./signin'));
