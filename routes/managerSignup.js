@@ -18,7 +18,7 @@ router.get('/', checkNotLogin, function(req, res, next) {
 // POST /signup 用户注册
 router.post('/', checkNotLogin, function(req, res, next) {
     var name = req.fields.name;
-    var code = '1479833945';
+    var code = '1479833945';//管理员注册密钥
     var password = req.fields.password;
     var repassword = req.fields.repassword;
     var mpassword = req.fields.mpassword;

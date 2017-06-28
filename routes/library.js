@@ -19,7 +19,7 @@ router.get('/Sorts', function (req, res, next) {
             var sorts = [];
             for (var i = 0; i < obj.length; i++) {
                 sorts[i] = {
-                    cover: 'http://localhost:3000/img/' + obj[i].sortCover,
+                    sortCover: obj[i].sortCover,
                     sortName: obj[i].sortName,
                     num: obj[i].sortBkNum,
                     sortEname: obj[i].sortEname
