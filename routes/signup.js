@@ -30,7 +30,7 @@ router.post('/', function (req, res, next) {
     function setUser(oneuser, callback) {
         var feedback = 'null';
         UserModel.create(oneuser)
-            .then(function (result) {
+            .then(function () {
                 feedback = 'success';
                 if (callback && typeof(callback) === "function") {
                     callback(feedback);
