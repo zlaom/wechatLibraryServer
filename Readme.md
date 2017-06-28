@@ -177,6 +177,8 @@ $ pm2 start index.js
 - 启动ngnix  
 [ngnix安装教程链接](http://www.linuxidc.com/Linux/2016-09/134907.htm) 中的启动部分
 
+- 进行访问测试
+
 
 [node-image]:https://img.shields.io/badge/node-v6.10.3-green.svg
 [node-url]: https://nodejs.org/en/download/
