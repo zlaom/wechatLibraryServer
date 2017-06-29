@@ -16,6 +16,7 @@
    * [网页管理员端使用说明(提供了测试网址)](#网页管理员端使用说明)
  * [部署](#部署)
  * [更新日志](#更新日志)
+ * [贡献者](#贡献者)
 
 ## 背景
 第六届“中国软件杯”大学生软件设计大赛赛题。意在制作一款方便人们借阅图书的软件，以提高人们的精神生活水平。   
@@ -183,6 +184,13 @@ $ pm2 start index.js
 
 ## 更新日志
 - 2017-6-29：第一次提交
+
+## 贡献者
+- Zhang LaoMing  
+- Gao HaoRan
+- Liu MingYang
+
+Email：vtrust32@gmail.com
 
 
 [node-image]:https://img.shields.io/badge/node-v6.10.3-green.svg
