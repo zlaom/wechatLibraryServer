@@ -1,6 +1,7 @@
 <p align="center">
     <img alt="Node.js" src="./ReadmeImage/favicon.ico.png" width="100px"/>
 </p>
+
 # “无微不至”的借阅伴侣  
 一个基于 微信小程序+Node.js+mongoDB 的图书馆借阅系统。  
 [![Npm Version][npm-image]][npm-url]
