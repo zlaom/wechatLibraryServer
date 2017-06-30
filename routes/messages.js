@@ -1,5 +1,6 @@
 /**
  * Created by 14798 on 2017/6/25.
+ * 微信端获得所有消息
  */
 var express = require('express');
 var moment = require('moment');
@@ -10,7 +11,7 @@ var MessageModel = require('../models/messages');
 
 var checkLogin = require('../middlewares/check').checkLogin;
 
-// 获得所有消息
+// /messages 获得所有消息
 router.get('/', function (req, res, next) {
     MessageModel.getUsers().then(function (users) {
         res.render('users', {
@@ -19,10 +20,9 @@ router.get('/', function (req, res, next) {
     }).catch(next);
 });
 
-// GET /users/:userId/edit 更新用户页面
+// GET /messages/:userId/edit 更新用户页面
 router.get('/:userId/edit', checkLogin, function (req, res, next) {
     var id = req.params.userId;
-    console.log(id);
     UserModel.getUserById(id)
         .then(function (user) {
             if (!user) {

@@ -1,15 +1,14 @@
 <%- include('header') %>
 <div class="ui grid">
     <div class="eight wide column">
-        <h3>类别管理</h3>
+        <h3>书籍搜索结果</h3>
     </div>
 </div>
 <div class="post-content">
     <div class="ui grid">
-<% sorts.forEach(function (sort) { %>
-<%- include('components/sort-content', { sort: sort }) %>
-<% }) %>
+        <% books.forEach(function (book) { %>
+        <%- include('components/book-content', { book: book }) %>
+        <% }) %>
     </div>
 </div>
-
 <%- include('footer') %>

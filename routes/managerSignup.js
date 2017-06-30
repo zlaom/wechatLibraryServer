@@ -1,5 +1,6 @@
 /**
  * Created by 14798 on 2017/6/23.
+ * 管理员登陆
  */
 var fs = require('fs');
 var path = require('path');
@@ -11,12 +12,12 @@ var ManagerModel = require('../models/manager');
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 
 // GET /managerSignup 注册页
-router.get('/', checkNotLogin, function(req, res, next) {
+router.get('/', checkNotLogin, function (req, res, next) {
     res.render('managerSignup');
 });
 
 // POST /managerSignup 用户注册
-router.post('/', checkNotLogin, function(req, res, next) {
+router.post('/', checkNotLogin, function (req, res, next) {
     var name = req.fields.name;
     var code = '1479833945';//管理员注册密钥
     var password = req.fields.password;
@@ -34,12 +35,12 @@ router.post('/', checkNotLogin, function(req, res, next) {
         if (password !== repassword) {
             throw new Error('两次输入密码不一致');
         }
-        if(mpassword!==code){
+        if (mpassword !== code) {
             throw new Error('管理员密码不一致');
         }
     } catch (e) {
-/*        // 注册失败，异步删除上传的头像
-        fs.unlink(req.files.avatar.path);*/
+        /*        // 注册失败，异步删除上传的头像
+         fs.unlink(req.files.avatar.path);*/
         req.flash('error', e.message);
         return res.redirect('/managerSignup');
     }

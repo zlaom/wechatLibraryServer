@@ -1,3 +1,6 @@
+<p align="center">
+    <img alt="Node.js" src="./ReadmeImage/favicon.ico.png" width="100px"/>
+</p>
 # “无微不至”的借阅伴侣
 一个基于 微信小程序+Node.js+mongoDB 的图书馆借阅系统。   
 [![Npm Version][npm-image]][npm-url]
@@ -80,7 +83,7 @@
   - 默认设置安装即可
 
 - clone微信小程序源码
-  - `git clone https://github.com/Vtrust/wechatLibraryApp`
+  - `$ git clone https://github.com/Vtrust/wechatLibraryApp`
 
 - 打开微信小程序
   - 扫码登陆
@@ -183,7 +186,7 @@ $ pm2 start index.js
 - 进行访问测试
 
 ## 更新日志
-- 2017-6-29：第一次提交
+- 2017-6-29 新增README文件
 
 ## 贡献者
 - Zhang LaoMing  

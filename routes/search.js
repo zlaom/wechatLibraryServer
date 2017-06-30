@@ -1,13 +1,13 @@
 /**
  * Created by 14798 on 2017/5/16.
+ * 搜索操作
  */
-/**
- * Created by Damian on 2017/5/14.
- */
+
 var express = require('express');
 var router = express.Router();
 var Book = require('../models/books');// 书籍模型
 
+// 搜索功能
 router.get('/',function (req,res,next) {
     var queryTitle={};
     queryTitle['bookTitle']=new RegExp(req.query.content);

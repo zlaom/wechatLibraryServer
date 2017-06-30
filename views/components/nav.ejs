@@ -1,9 +1,25 @@
-<div class="nav">
-  <div class="ui grid">
-    <div class="four wide column"></div>
-    <div class="eight wide column">
-      <a href="/books"><h1><%= library.title %></h1></a>
-      <p><%= library.description %></p>
+<div class="ui secondary  menu">
+    <% if (user) { %>
+  <a class="item" href="/books"><i class="book icon"></i>书籍管理</a>
+  <a class="item" href="/sorts"><i class="archive icon"></i>类别管理</a>
+  <a class="item" href="/users"><i class="user icon"></i>用户管理</a>
+  <!-- <a class="item" href="/messages">消息管理</a>-->
+  <a class="item" href="/bookSignup"><i class="arrow up icon"></i>书籍注册</a>
+  <a class="item" href="/sortSignup"><i class="arrow up icon"></i>类别注册</a>
+  <div class="divider"></div>
+  <div class="right menu">
+    <div class="item">
+      <form method="get"  action="/books/search">
+        <div class="ui icon input">
+          <input type="text" name="content" placeholder="回车搜书...">
+          <i class="search link icon" ></i>
+        </div>
+      </form>
     </div>
+    <a class="item" href="/signout"><i class="sign out icon"></i>登出</a>
   </div>
+    <% } else { %>
+  <a class="item" href="/signin"><i class="sign in icon"></i>登录</a>
+  <a class="item" href="/managerSignup"><i class="add user icon"></i>注册</a>
+    <% } %>
 </div>

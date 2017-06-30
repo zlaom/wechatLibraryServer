@@ -1,20 +1,18 @@
-<div class="post-content">
-    <div class="ui grid">
-        <div class="four wide column">
-        </div>
-        <div class="eight wide column">
-            <div class="four wide column"></div>
-            <div class="four wide column">
+  <div class="four wide column">
+            <div class="six wide column">
                 <div class="ui segment">
                   <div class="ui grid">
-                    <div class="four wide column">
-                      <img src="/img/<%= book.bookCover %>" width="100px"/>
+                    <div class="six wide column">
+                      <div style="height: 120px">
+                          <img src="/img/<%= book.bookCover %>" width="70px"/>
+                      </div>
                     </div>
-                    <div class="eight wide column">
-                      <h3><a href="/books/<%= book.bookId %>/bookEdit"><%= book.bookTitle %></a></h3>
-                      <p>作者：<%= book.bookAuthor %><p>
-                      <p>出版社：<%= book.bookPress %><p>
-                      <p>条形码：<%= book.bookId %><p>
+                    <div class="ten wide column">
+                      <h3><a href="/books/<%= book.bookId %>/edit"><%= book.bookTitle %></a></h3>
+                      <p>
+                      作者：<cite><%= book.bookAuthor %></cite></br>
+                      条形码：<cite><%= book.bookId %></cite>
+                      </p>
                     </div>
                   </div>
                   <div>
@@ -24,7 +22,7 @@
                            <div class="text"></div>
                            <i class="dropdown icon"></i>
                            <div class="menu">
-                             <div class="item"><a href="/books/<%= book.bookId %>/bookEdit">编辑</a></div>
+                             <div class="item"><a href="/books/<%= book.bookId %>/edit">编辑</a></div>
                              <div class="item"><a href="/books/<%= book.bookId %>/remove">删除</a></div>
                            </div>
                          </div>
@@ -33,5 +31,3 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>

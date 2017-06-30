@@ -1,12 +1,15 @@
 <%- include('header') %>
 <div class="ui grid">
-    <div class="four wide column"></div>
     <div class="eight wide column">
         <h3>用户管理</h3>
     </div>
 </div>
+<div class="post-content">
+    <div class="ui grid">
 <% users.forEach(function (user) { %>
 <%- include('components/user-content', { user: user }) %>
 <% }) %>
+    </div>
+</div>
 
 <%- include('footer') %>

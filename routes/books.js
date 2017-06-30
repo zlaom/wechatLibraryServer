@@ -1,8 +1,6 @@
 /**
- * Created by 14798 on 2017/6/23.
- */
-/**
  * Created by 14798 on 2017/4/15.
+ * 关于书籍操作的路由
  */
 var fs = require('fs');
 var path = require('path');
@@ -13,8 +11,9 @@ var BookModel = require('../models/books');// 书籍模型
 var BookStatusModel = require('../models/bookStatus');// 书籍状态模型
 var SortModel = require('../models/sorts');// 类型模型
 var checkLogin = require('../middlewares/check').checkLogin;
-// 获得所有书籍
-router.get('/', function (req, res, next) {
+
+//GET /books 管理员端获得所有书籍
+router.get('/', checkLogin, function (req, res, next) {
     BookModel.getBooks().then(function (books) {
         res.render('books', {
             books: books
@@ -22,10 +21,10 @@ router.get('/', function (req, res, next) {
     }).catch(next);
 });
 
-// GET /books/:bookId/remove 删除一篇文章
-router.get('/:bookId/remove', checkLogin, function(req, res, next) {
+// GET /books/:bookId/remove 删除一本书
+router.get('/:bookId/remove', checkLogin, function (req, res, next) {
     var bookId = req.params.bookId;
-    console.log(bookId);
+
     BookModel.delBookById(bookId)
         .then(function () {
             req.flash('success', '删除书籍成功');
@@ -36,7 +35,7 @@ router.get('/:bookId/remove', checkLogin, function(req, res, next) {
 });
 
 // GET /books/:bookId/edit 更新书本页面
-router.get('/:bookId/bookEdit', checkLogin, function(req, res, next) {
+router.get('/:bookId/edit', checkLogin, function (req, res, next) {
     var bookId = req.params.bookId;
 
     BookModel.getBookByBookId(bookId)
@@ -44,15 +43,20 @@ router.get('/:bookId/bookEdit', checkLogin, function(req, res, next) {
             if (!book) {
                 throw new Error('该书本不存在');
             }
-            res.render('bookEdit', {
-                book: book
-            });
+            SortModel.showSorts().then(function (sorts) {
+                res.render('bookEdit', {
+                    book: book,
+                    sorts: sorts
+                });
+            })
         })
         .catch(next);
 });
-// POST /books/:bookId/bookEdit 更新一本书
-router.post('/:bookId/bookEdit', checkLogin, function(req, res, next) {
+
+// POST /books/:bookId/edit 更新一本书
+router.post('/:bookId/edit', checkLogin, function (req, res, next) {
     // 获取变量值
+    var id=req.params.bookId;
     var bookId = req.fields.bookId;
     var bookTitle = req.fields.bookTitle;
     var bookAuthor = req.fields.bookAuthor;
@@ -60,9 +64,8 @@ router.post('/:bookId/bookEdit', checkLogin, function(req, res, next) {
     var bookNum = req.fields.bookNum;
     var bookAbstract = req.fields.bookAbstract;
     var bookSorts = [];
-    var bookCan = bookNum;
-    var bookBowNum = '0';
-    if(req.files.bookCover.size>0){
+    var bookBowNum = req.fields.bookBowNum;
+    if (req.files.bookCover.size > 0) {
         var bookCover = req.files.bookCover.path.split(path.sep).pop();
     }
 
@@ -74,24 +77,24 @@ router.post('/:bookId/bookEdit', checkLogin, function(req, res, next) {
     var bookSort3 = req.fields.bookSort3;
     if (bookSort1) {
         bookSorts[i] = bookSort1;
-        console.log(SortModel.getSortByBookSort(bookSort1));
         for (var j = 0; j < bookNum; j++)
             SortModel.updateSortBkNumBySortEname(bookSort1);
         i++;
     }
-    if (bookSort2) {
+    if (bookSort2 && bookSort2 != bookSort1) {
         bookSorts[i] = bookSort2;
-        console.log(SortModel.getSortByBookSort(bookSort2));
         for (var j = 0; j < bookNum; j++)
             SortModel.updateSortBkNumBySortEname(bookSort2);
         i++;
     }
-    if (bookSort3) {
-        bookSorts[i] = bookSort3;
-        console.log(SortModel.getSortByBookSort(bookSort3));
-        for (var j = 0; j < bookNum; j++)
-            SortModel.updateSortBkNumBySortEname(bookSort3);
-        i++;
+    if (bookSort3 && bookSort3 != bookSort1) {
+        if (bookSort3 != bookSort2) {
+            bookSorts[i] = bookSort3;
+            for (var j = 0; j < bookNum; j++)
+                SortModel.updateSortBkNumBySortEname(bookSort3);
+            i++;
+        }
+
     }
 
     //模板赋值
@@ -103,105 +106,53 @@ router.post('/:bookId/bookEdit', checkLogin, function(req, res, next) {
         bookSorts: bookSorts,
         bookAbstract: bookAbstract,
         bookNum: parseInt(bookNum),
-        bookCan: parseInt(bookCan),
         bookBowNum: parseInt(bookBowNum)
     };
-    if(bookCover){
-        console.log('增加');
-        book.bookCover=bookCover;
+    // 重新设置了封面
+    if (bookCover) {
+        book.bookCover = bookCover;
     }
-    BookModel.updateBookById(bookId, book)
+    BookModel.updateBookById(id, book)
         .then(function () {
-            console.log("成功");
             req.flash('success', '编辑书本成功');
             // 编辑成功后跳转到上一页
-            res.redirect(`/books/${bookId}/bookEdit`);
+            res.redirect(`/books/${id}/edit`);
         })
-        .catch(next);
+        .catch(function (e) {
+            fs.unlink(req.files.bookCover.path);
+            if (e.message.match('E11000 duplicate key')) {
+                req.flash('error', '条形码已被占用');
+                return res.redirect(`/books/${id}/edit`);
+            }
+            next(e);
+        });
 });
 
-// 单本书籍
-router.get('/bookDetail', function (req, res, next) {
-    // 参数获取及初始化
-    var userId = req.query.userId;
-    var bookId = req.query.bookId;
-    var data = {
-        book: '',
-        relatedBooks: '',
-        bookStatus: '',
-        statusId: 'null'
-    };
-
-    //获得一本书
-    BookModel.getBookByBookId(bookId).then(function (book) {
-        var Sorts = book.bookSorts;
-        var BookId = book.bookId;
-        var sorts = "";
-
-        // 进行书籍分类匹配
-        for (var i = 0; i < book.bookSorts.length; i++) {
-            var sort = book.bookSorts[i];
-            switch (sort) {
-                case 'e':
-                    sort = '英语';
-                    break;
-                case 'c':
-                    sort = '计算机';
-                    break;
-                case 's':
-                    sort = '科学';
-                    break;
-                case 'h':
-                    sort = '历史';
-                    break;
-                case 'l':
-                    sort = '文化';
-                    break;
-                default:
-                    break;
-            }
-            sorts = sort + ' ' + sorts;
-        }
-        book.bookSorts = sorts;
-
-        data.book = book;
-
-        //获得一本书的推荐书籍
-        BookModel.getRelaBooksByBookId(Sorts, BookId).then(function (book1) {
-            var relatedBooks = [];
-            for (var i = 0; i < book1.length; i++) {
-                relatedBooks[i] = {
-                    bookId: book1[i].bookId,
-                    bookTitle: book1[i].bookTitle,
-                    bookCover: book1[i].bookCover
-                };
-            }
-            data.relatedBooks = relatedBooks;
-
-            // 判断当前书籍是否已经预约
-            BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "reserve").then(function (obj) {
-                if (!obj) {
-                    // 不是预订书籍，开始判断当前书籍是否已经借阅
-                    BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "borrow").then(function (obj) {
-                        if (!obj) {
-                            data.bookStatus = "none";
-                        } else {
-                            data.bookStatus = "borrow";
-                            data.statusId = obj._id;
-                        }
-                        res.send(data);
-                    })
+// 搜索功能
+router.get('/search', function (req, res, next) {
+    var queryTitle = {};
+    queryTitle['bookTitle'] = new RegExp(req.query.content);
+    BookModel.getBookBySearch(queryTitle).then(function (books) {
+        if (!books.length) {
+            var queryAuthor = {};
+            queryAuthor['bookAuthor'] = new RegExp(req.query.content);
+            BookModel.getBookBySearch(queryAuthor).then(function (books) {
+                if (!books.length) {
+                    res.render('books', {
+                        books: ''
+                    });
                 } else {
-                    console.log(obj);
-                    data.bookStatus = "reserve";
-                    data.statusId = obj._id;
-                    console.log(data);
-                    res.send(data);
+                    res.render('books', {
+                        books: books
+                    });
                 }
             });
-        })
-    });
+        } else {
+            res.render('books', {
+                books: books
+            });
+        }
+    })
 });
-
 module.exports = router;
 

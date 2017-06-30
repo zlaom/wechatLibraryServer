@@ -1,5 +1,6 @@
 /**
  * Created by 14798 on 2017/5/8.
+ * 包含一些对消息数据库操作的函数
  */
 var Message = require('../lib/mongo').Message;
 
@@ -12,7 +13,7 @@ module.exports = {
     // 通过用户ID获取一个用户的所有消息并且按照时间排序
     getMessagesByUserId: function getMessagesByUserId(userId) {
         return Message.find({userId: userId})
-            .sort({_id: -1})
+            .sort({_id: -1})//时间降序
             .addCreatedAt()
             .exec();
     },

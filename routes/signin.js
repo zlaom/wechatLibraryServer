@@ -1,3 +1,6 @@
+/**
+ *管理员登陆
+ */
 var sha1 = require('sha1');
 var express = require('express');
 var router = express.Router();
@@ -10,7 +13,7 @@ router.get('/', checkNotLogin, function (req, res, next) {
     res.render('signin');
 });
 
-// POST /signin 用户登录
+// POST /signin 管理员登录
 router.post('/', checkNotLogin, function (req, res, next) {
     var name = req.fields.name;
     var password = req.fields.password;

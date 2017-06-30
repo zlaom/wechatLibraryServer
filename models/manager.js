@@ -3,6 +3,7 @@
  */
 /**
  * Created by 14798 on 2017/4/13.
+ * 包含一些对管理员数据库操作的函数
  */
 var Manager = require('../lib/mongo').Manager;
 
@@ -15,7 +16,7 @@ module.exports = {
     // 通过用户名获取用户信息
     getManagerByName: function getManagerByName(name) {
         return Manager
-            .findOne({ name: name })
+            .findOne({name: name})
             .addCreatedAt()
             .exec();
     }

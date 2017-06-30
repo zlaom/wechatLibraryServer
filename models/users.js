@@ -1,3 +1,6 @@
+/**
+ * 包含一些对用户数据库操作的函数
+ */
 var User = require('../lib/mongo').User;
 var BookStatus = require('./bookStatus');
 var Message = require('./messages');
@@ -9,18 +12,18 @@ module.exports = {
     },
 
     // 通过用户id删除一个用户
-    delUserById:function delUserById(id){
-      return User.remove({userId:id}).then(function (res) {
-          // 删除对应的用户状态记录
-          if (res.result.ok && res.result.n > 0) {
-              return BookStatus.delBookStatusByUserId(id).then(function (res) {
-                  // 删除对应的用户消息记录
-                  if (res.result.ok && res.result.n > 0) {
-                      return Message.getMessagesByUserId(id);
-                  }
-              });
-          }
-      });
+    delUserById: function delUserById(id) {
+        return User.remove({userId: id}).then(function (res) {
+            // 删除对应的用户状态记录
+            if (res.result.ok && res.result.n > 0) {
+                return BookStatus.delBookStatusByUserId(id).then(function (res) {
+                    // 删除对应的用户消息记录
+                    if (res.result.ok && res.result.n > 0) {
+                        return Message.getMessagesByUserId(id);
+                    }
+                });
+            }
+        });
     },
 
     // 通过用户名获取用户信息
@@ -29,12 +32,12 @@ module.exports = {
     },
 
     // 获取所有用户信息
-    getUsers:function  getUsers(){
+    getUsers: function getUsers() {
         return User.find().exec();
     },
 
     // 根据Id更改用户信息
-    updateUserById:function updateUserById(id,data){
-        return User.update({ userId: id}, { $set: data }).exec();
+    updateUserById: function updateUserById(id, data) {
+        return User.update({userId: id}, {$set: data}).exec();
     }
 };

@@ -1,3 +1,6 @@
+/**
+ * 管理员注册
+ */
 var fs = require('fs');
 var path = require('path');
 var sha1 = require('sha1');
@@ -51,6 +54,7 @@ router.post('/', function (req, res, next) {
     })
 });
 
+// 判断用户是否存在
 router.get('/ifExist', function (req, res) {
     var userId = req.query.userId;
     console.log(userId);
@@ -61,6 +65,7 @@ router.get('/ifExist', function (req, res) {
                 res.send("notExist");
                 console.log("notExist");
             } else {
+                console.log("Exist");
                 res.send("exist");
             }
         });

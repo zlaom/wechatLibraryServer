@@ -17,13 +17,15 @@ const fs = require('fs');
 
 var app = express();
 
+/*
+// 本地HTTPS测试
 const credentials = {
     key: fs.readFileSync('path/to/privatekey.pem'),
     cert: fs.readFileSync('path/to/certificate.pem')
 };
-
-/*var httpServer = http.createServer(app);
- var httpsServer = https.createServer(credentials, app);*/
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+*/
 
 // 设置模板目录
 app.set('views', path.join(__dirname, 'views'));
@@ -107,7 +109,18 @@ app.use(function (err, req, res, next) {
     });
 });
 
+if (module.parent) {
+    module.exports = app;
+} else {
+    // 监听端口，启动程序
+    const port = process.env.PORT || config.port;
+    app.listen(port, function () {
+        console.log(`${pkg.name} listening on port ${port}`);
+    });
+}
+
 /*
+// herokun部署使用
  if (module.parent) {
  module.exports = app;
  } else {
@@ -120,13 +133,3 @@ app.use(function (err, req, res, next) {
  });
  }
  */
-if (module.parent) {
-    module.exports = app;
-} else {
-    // 监听端口，启动程序
-    const port = process.env.PORT || config.port;
-    app.listen(port, function () {
-        console.log(`${pkg.name} listening on port ${port}`);
-    });
-}
-

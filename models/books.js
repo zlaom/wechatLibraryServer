@@ -1,30 +1,28 @@
 /**
  * Created by 14798 on 2017/4/13.
+ * 包含一些对书籍操作的函数
  */
 var Book = require('../lib/mongo').Book;
 var BookStatus = require('./bookStatus');
 var config = require('config-lite');
 module.exports = {
-    // 注册一本书
+    // 录入一本书
     create: function create(book) {
         return Book.create(book).exec();
     },
 
     // 获得所有书
     getBooks: function getBooks() {
-
         return Book
             .find()
-            .sort({_id: -1})
+            .sort({_id: -1})//按照时间降序排序
             .addCreatedAt()
             .exec();
     },
 
     // 通过bookId查找一本书
     getBookByBookId: function getBookByBookId(bookId) {
-        //console.log(bookId);
         var query = {bookId: bookId};
-        //console.log(query);
         return Book.findOne(query);
     },
 
@@ -33,11 +31,12 @@ module.exports = {
         return Book.find({bookSorts: sorts}).exec();
     },
 
+    // 通过分类查找推荐书籍
     getRecommendBooksByBookSort: function getBooksByBookSort(sorts) {
-        return Book.find({bookSorts: {$in:sorts}}).limit(config.recommendNum).exec();
+        return Book.find({bookSorts: {$in: sorts}}).limit(config.recommendNum).exec();
     },
 
-    // 查找一个分类
+    // 查找一个分类下的所有书
     getBooksBySort: function getBooksBySort(sort) {
         return Book.find({bookSorts: sort}).exec()
     },
@@ -64,7 +63,7 @@ module.exports = {
 
     // 通过bookId删除一本书
     delBookById: function delBookById(bookId) {
-        return Book.remove({bookId:bookId}).exec().then(function (res) {
+        return Book.remove({bookId: bookId}).exec().then(function (res) {
             // 删除对应的书籍状态记录
             if (res.result.ok && res.result.n > 0) {
                 return BookStatus.delBookStatusByBookId(bookId);
@@ -73,10 +72,7 @@ module.exports = {
     },
 
     // 通过bookId更新数据
-    updateBookById: function updateBookById(bookId,data){
-        return Book.update({ bookId: bookId}, { $set: data }).exec();
+    updateBookById: function updateBookById(bookId, data) {
+        return Book.update({bookId: bookId}, {$set: data}).exec();
     }
-
-
-
 };

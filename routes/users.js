@@ -1,5 +1,6 @@
 /**
  * Created by 14798 on 2017/6/23.
+ * 用户管理
  */
 var express = require('express');
 var moment = require('moment');
@@ -21,7 +22,6 @@ router.get('/', function (req, res, next) {
 // GET /users/:userId/edit 更新用户页面
 router.get('/:userId/edit', checkLogin, function (req, res, next) {
     var id = req.params.userId;
-    console.log(id);
     UserModel.getUserById(id)
         .then(function (user) {
             if (!user) {
@@ -50,7 +50,6 @@ router.post('/:userId/edit', checkLogin, function (req, res, next) {
         phone: phone,
         idCard: idCard
     };
-    console.log(_id);
     UserModel.updateUserById(_id, user)
         .then(function () {
             console.log("成功");
@@ -116,7 +115,6 @@ router.get('/:userId/status/:statusId/remove', checkLogin, function (req, res, n
     // 获取变量值
     var userId = req.params.userId;
     var statusId = req.params.statusId;
-    console.log('删除状态'+statusId );
     BookStatusModel. delBookStatusByStatusId(statusId)
         .then(function () {
             req.flash('success', '删除状态成功');

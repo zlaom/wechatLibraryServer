@@ -23,8 +23,11 @@ var compare = function (x, y) {//比较函数
     } else {
         return 0;
     }
-}
+};
+function down(x, y) {
+    return (x.time < y.time) ? 1 : -1
 
+}
 
 // 获得应用详情页数据
 router.get('/', function (req, res, next) {
@@ -74,19 +77,18 @@ router.get('/', function (req, res, next) {
                     Book.getBookByBookId(obj[i].bookId)//根据bookid查找对应book
                         .then(function (book) {
 
+                            book={
+                                bookId: book.bookId,
+                                bookTitle: book.bookTitle,
+                                bookCover: book.bookCover,
+                                time:book.time
+                            };
+
                             reserveBook.push(book);//装进reserveBook临时数组
 
-                            if (reserveBook.length == obj.length) {//查找完毕，改造json结构
+                            if (reserveBook.length == obj.length) {
 
-                                for (var j = 0; j < reserveBook.length; j++) {
-
-                                    reserveBook[j] = {
-                                        bookId: reserveBook[j].bookId,
-                                        bookTitle: reserveBook[j].bookTitle,
-                                        bookCover: reserveBook[j].bookCover
-                                    };
-
-                                }
+                                reserveBook.sort(down);
 
                                 data.reserveBook = reserveBook;//设置data
 
@@ -126,15 +128,15 @@ router.get('/', function (req, res, next) {
                 for (var i = 0; i < obj.length; i++) {
                     Book.getBookByBookId(obj[i].bookId)//根据bookid查找对应book
                         .then(function (book) {
+                            book={
+                                bookId: book.bookId,
+                                bookTitle: book.bookTitle,
+                                bookCover: book.bookCover,
+                                time:book.time
+                            };
                             borrowBook.push(book);//装进borrowBook临时数组
-                            if (borrowBook.length == obj.length) {//查找完毕，改造json结构
-                                for (var j = 0; j < borrowBook.length; j++) {
-                                    borrowBook[j] = {
-                                        bookId: borrowBook[j].bookId,
-                                        bookTitle: borrowBook[j].bookTitle,
-                                        bookCover: borrowBook[j].bookCover
-                                    };
-                                }
+                            if (borrowBook.length == obj.length) {
+                                borrowBook.sort(down);
                                 data.borrowBook = borrowBook;//设置data
                                 flag[1] = -1;//标记置-1
                                 // console.log('flag[0]=' + flag[0] + '\nflag[1]=' + flag[1]);
@@ -237,7 +239,6 @@ router.get('/', function (req, res, next) {
                 }
             }
         });
-
     /*获取用户消息数*/
     Message.getMessagesByUserId(userId)
         .then(function (obj) {
@@ -252,7 +253,6 @@ router.get('/', function (req, res, next) {
             }
         })
 });
-
 
 // 获得用户详情数据
 /**
@@ -280,10 +280,19 @@ router.get('/messages', function (req, res, next) {
             for (var i = 0; i < obj.length; i++) {
                 obj[i].ifShow = 1;
             }
-            var data = {
+            data = {
                 messagesNum: obj.length,
                 messages: obj
             };
+            /*var test = moment().format("x");
+             console.log(objectIdToTimestamp(obj[0]._id));
+             console.log(objectIdToTimestamp(obj[1]._id));
+             console.log(test-objectIdToTimestamp(obj[1]._id));
+             var time = moment(objectIdToTimestamp(obj[1]._id),"M").fromNow();
+             console.log(time);
+             console.log("m");
+             console.log(test);
+             //console.log(data);*/
             res.send(data);
         })
 });

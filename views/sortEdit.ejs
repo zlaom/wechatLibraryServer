@@ -1,29 +1,46 @@
 <%- include header %>
 <div class="ui grid">
-    <div class="four wide column"></div>
     <div class="eight wide column">
         <h3>类别信息</h3>
     </div>
 </div>
 <div class="ui grid">
-    <div class="four wide column"></div>
-    <div class="eight wide column">
+    <div class="sixteen wide column">
         <form class="ui form segment" method="post" enctype="multipart/form-data">
-            <div class="field required">
-                <label>类别</label>
-                <input placeholder="类别" type="text" name="sortName" value="<%= sort.sortName%>">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <div class="field required">
+                        <label>封面</label>
+                        <img src="/img/<%= sort.sortCover %>" width="100px"/></br>
+                        <input type="file" name="sortCover">
+                    </div>
+                </div>
+                <div class="eight wide column">
+                    <div class="field required">
+                        <label>类名</label>
+                        <input placeholder="类名" type="text" name="sortName" value="<%= sort.sortName%>">
+                    </div>
+                    <div class="field required">
+                        <label>藏书数</label>
+                        <input placeholder="类名" type="text" name="sortBkNum" value="<%= sort.sortBkNum%>">
+                    </div>
+                </div>
             </div>
-            <div class="field required">
-                <label>类别英文缩写</label>
-                <input placeholder="类别英文缩写" type="text" name="sortEname" value="<%= sort.sortEname%>">
-            </div>
-            <div class="field required">
-                <label>封面</label>
-                <img src="/img/<%= sort.sortCover %>" width="100px"/>
-                <input type="file" name="sortCover">
-            </div>
+            <div style="height: 10px"></div>
             <input type="submit" class="ui button fluid" value="修改">
         </form>
+    </div>
+</div>
+<div class="ui grid">
+    <div class="eight wide column">
+        <h3><%= sort.sortName%>类书籍管理</h3>
+    </div>
+</div>
+<div class="post-content">
+    <div class="ui grid">
+        <% books.forEach(function (book) { %>
+        <%- include('components/book-content', { book: book }) %>
+        <% }) %>
     </div>
 </div>
 

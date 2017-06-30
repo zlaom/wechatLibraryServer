@@ -1,28 +1,26 @@
-<div class="post-content">
-    <div class="ui grid">
-        <div class="four wide column">
-        </div>
-
-        <div class="eight wide column">
-            <div class="ui segment">
-                <p>用户：<%= bstatus.userId %></p>
-                <p>创建时间：<%= bstatus.created_at %></p>
-                <p>条形码值：<%= bstatus.bookId %><p>
-                <p>状态类型：<%= bstatus.type %><p>
-                <div>
-                    <span class="tag"></span>
-                    <span class="tag right">
-                    <div class="ui inline dropdown">
-                      <div class="text"></div>
+<div class="four wide column">
+    <div class="ui segment">
+        <p>用户：<%= bstatus.userId %></p>
+        <p>创建时间：<%= bstatus.created_at %></p>
+        <p>条形码值：<%= bstatus.bookId %><p>
+        <p>状态类型：<%= bstatus.type %><p>
+        <div>
+            <span class="tag"></span>
+            <span class="tag right">
+                <div class="ui inline dropdown">
+                    <div class="text"></div>
                       <i class="dropdown icon"></i>
                       <div class="menu">
-                        <div class="item"><a href="/users/<%= bstatus.userId %>/status/<%= bstatus._id %>/edit">编辑</a></div>
-                        <div class="item"><a href="/users/<%= bstatus.userId %>/status/<%= bstatus._id %>/remove">删除</a></div>
+                          <div class="item">
+                              <a href="/users/<%= bstatus.userId %>/status/<%= bstatus._id %>/edit">编辑</a>
+                          </div>
+                        <div class="item">
+                            <a href="/users/<%= bstatus.userId %>/status/<%= bstatus._id %>/remove">删除</a>
+                        </div>
                       </div>
-                    </div>
-                </span>
                 </div>
-            </div>
+            </span>
         </div>
     </div>
 </div>
+

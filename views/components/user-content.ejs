@@ -1,27 +1,20 @@
-<div class="post-content">
-    <div class="ui grid">
-        <div class="four wide column">
-        </div>
-
-        <div class="eight wide column">
-            <div class="ui segment">
-                <h3><a href="/users/<%= user.userId %>/edit"><%= user.userId %></a></h3>
-                <p>电话：<%= user.phone %><p>
-                <p>身份证：<%= user.idCard %><p>
-                <div>
-                    <span class="tag"></span>
-                    <span class="tag right">
-                      <div class="ui inline dropdown">
-                        <div class="text"></div>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                          <div class="item"><a href="/users/<%= user.userId %>/edit">编辑</a></div>
-                          <div class="item"><a href="/users/<%= user.userId %>/remove">删除</a></div>
-                        </div>
-                      </div>
-                  </span>
+<div class="four wide column">
+    <div class="ui segment">
+        <h3><a href="/users/<%= user.userId %>/edit"><%= user.userId %></a></h3>
+        <p>电话：<%= user.phone %><p>
+        <p>身份证：<%= user.idCard %><p>
+        <div>
+            <span class="tag"></span>
+            <span class="tag right">
+                <div class="ui inline dropdown">
+                    <div class="text"></div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item"><a href="/users/<%= user.userId %>/edit">编辑</a></div>
+                        <div class="item"><a href="/users/<%= user.userId %>/remove">删除</a></div>
+                    </div>
                 </div>
-            </div>
+            </span>
         </div>
     </div>
 </div>

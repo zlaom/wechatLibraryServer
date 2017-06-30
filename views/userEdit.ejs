@@ -1,38 +1,47 @@
 <%- include('header') %>
 <div class="ui grid">
-    <div class="four wide column"></div>
     <div class="eight wide column">
-        <h3>用户信息</h3>
+        <h3>用户信息编辑</h3>
     </div>
 </div>
 <div class="ui grid">
-    <div class="four wide column"></div>
-    <div class="eight wide column">
+    <div class="sixteen wide column">
         <form class="ui form segment" method="post" enctype="multipart/form-data">
-            <div class="field">
-                <label>用户名</label>
-                <p><%= user.userId %></p>
+            <div class="ui grid">
+                <div class="eight wide column">
+                    <div class="field">
+                        <label>用户名</label>
+                        <p><%= user.userId %></p>
+                    </div>
+                </div>
+                <div class="eight wide column">
+                    <div class="field required">
+                        <label>电话</label>
+                        <input placeholder="书名" type="text" name="phone" value="<%= user.phone %>">
+                    </div>
+                    <div class="field required">
+                        <label>身份证</label>
+                        <input placeholder="作者" type="text" name="idCard" value="<%= user.idCard %>">
+                    </div>
+                </div>
             </div>
-            <div class="field required">
-                <label>电话</label>
-                <input placeholder="书名" type="text" name="phone" value="<%= user.phone %>">
-            </div>
-            <div class="field required">
-                <label>身份证</label>
-                <input placeholder="作者" type="text" name="idCard" value="<%= user.idCard %>">
-            </div>
+            <div style="height: 10px"></div>
             <input type="submit" class="ui button fluid" value="修改">
         </form>
     </div>
 </div>
 <div class="ui grid">
-    <div class="four wide column"></div>
     <div class="eight wide column">
-        <h3>状态记录</h3>
+        <h3>行为记录</h3>
     </div>
 </div>
+<div class="post-content">
+    <div class="ui grid">
 <% bstatus.forEach(function (status) { %>
 <%- include('components/status-content', { bstatus: status }) %>
 <% }) %>
+    </div>
+</div>
+
 
 <%- include('footer') %>

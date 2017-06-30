@@ -1,5 +1,6 @@
 /**
  * Created by 14798 on 2017/4/15.
+ * 微信端图书馆
  */
 var express = require('express');
 var moment = require('moment');
@@ -8,9 +9,10 @@ var BookModel = require('../models/books');// 书籍模型
 var BookStatusModel = require('../models/bookStatus');// 书籍状态模型
 var MessageModel = require('../models/messages');// 消息模型
 var SortModel = require('../models/sorts');// 类型模型
+var checkLogin = require('../middlewares/check').checkLogin;
 
 
-// 获得所有分类
+//GET /library/Sorts 获得所有分类
 router.get('/Sorts', function (req, res, next) {
     SortModel.showSorts().then(function (obj) {
         if (!obj) {
@@ -32,7 +34,7 @@ router.get('/Sorts', function (req, res, next) {
     });
 });
 
-// 得到一个分类
+//GET /library/sortDetail 得到一个分类下的所有书籍
 router.get('/sortDetail', function (req, res, next) {
     var sort = req.query.bookSort;
     BookModel.getBooksByBookSort(sort).then(function (obj) {
@@ -45,19 +47,18 @@ router.get('/sortDetail', function (req, res, next) {
                     bookId: obj[i].bookId,
                     cover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
-                    bookAuthor:obj[i].bookAuthor,
+                    bookAuthor: obj[i].bookAuthor,
                     bookAbstract: obj[i].bookAbstract,
                     bookNum: obj[i].bookNum,
                     canBorrow: obj[i].bookCan
                 };
             }
-            //console.log(books);
             res.send(books);
         }
     })
 });
 
-// 书籍详情页面
+//GET /library/bookDetail 书籍详情页面
 router.get('/bookDetail', function (req, res, next) {
     // 参数获取及初始化
     var userId = req.query.userId;
@@ -78,26 +79,9 @@ router.get('/bookDetail', function (req, res, next) {
         // 进行书籍分类匹配
         for (var i = 0; i < book.bookSorts.length; i++) {
             var sort = book.bookSorts[i];
-            switch (sort) {
-                case 'e':
-                    sort = '英语';
-                    break;
-                case 'c':
-                    sort = '计算机';
-                    break;
-                case 's':
-                    sort = '科学';
-                    break;
-                case 'h':
-                    sort = '历史';
-                    break;
-                case 'l':
-                    sort = '文化';
-                    break;
-                default:
-                    break;
+            if(sort!='null'){
+                sorts = sort + ' ' + sorts;
             }
-            sorts = sort + ' ' + sorts;
         }
         book.bookSorts = sorts;
 
@@ -114,16 +98,12 @@ router.get('/bookDetail', function (req, res, next) {
                 };
             }
             data.relatedBooks = relatedBooks;
-            console.log(userId+' '+bookId);
             // 判断当前书籍是否已经预约
-            console.log('判断当前书籍是否已经预约');
             BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "reserve").then(function (obj) {
                 if (!obj) {
                     // 不是预订书籍，开始判断当前书籍是否已经借阅
-                    console.log('不是预订书籍，开始判断当前书籍是否已经借阅');
                     BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "borrow").then(function (obj) {
                         if (!obj) {
-                            console.log('不是借阅书籍，开始判断当前书籍是否已经借阅');
                             data.bookStatus = "none";
                         } else {
                             data.bookStatus = "borrow";
@@ -132,10 +112,8 @@ router.get('/bookDetail', function (req, res, next) {
                         res.send(data);
                     })
                 } else {
-                    console.log(obj);
                     data.bookStatus = "reserve";
                     data.statusId = obj._id;
-                    console.log(data);
                     res.send(data);
                 }
             });
@@ -143,9 +121,9 @@ router.get('/bookDetail', function (req, res, next) {
     });
 });
 
-// 书籍预订操作
-router.post('/bookReserve', function (req, res, next) {
-    console.log("预订");
+//POST /library/bookReserve书籍预订操作
+router.post('/bookReserve',function (req, res, next) {
+    console.log(req.headers.session+"  ok");
     // 参数获取及初始化
     var userId = req.fields.userId;
     var bookId = req.fields.bookId;
@@ -175,7 +153,6 @@ router.post('/bookReserve', function (req, res, next) {
     // 找到相关书籍
     BookModel.getBookByBookId(bookId)
         .then(function (obj) {
-            console.log(obj);
             // 判断当前书籍是否还有可借数，有则给状态分配资源并把resources标志位置1
             if (obj.bookCan > 0) {
                 bookStatus.resources = 1;
@@ -185,7 +162,6 @@ router.post('/bookReserve', function (req, res, next) {
 
             BookStatusModel.bookStatus(bookStatus)
                 .then(function (obj) {
-                    console.log(obj.ops[0]._id);
                     resData.statusId = obj.ops[0]._id; // 获取当前生成的bookstatus的_id
                     message.userId = userId;
                     message.author = author;
@@ -197,20 +173,17 @@ router.post('/bookReserve', function (req, res, next) {
                         BookModel.bookCanCut(bookId);
                     }
                     resData.message = 'success';
-                    console.log(resData);
                     res.send(resData);// 发送数据
-                    console.log('发送成功！');
                 })
                 .catch(function (err) {// 错误判断
                     resData.resources = 0;
                     resData.message = '预约失败！';
                     res.send(resData);// 发送数据
-                    console.log('发送失败！');
                 });
         });
 });
 
-// 取消预订操作
+// POST /library/cancelReserve取消预订操作
 router.post('/cancelReserve', function (req, res, next) {
     // 参数获取及初始化
     var userId = req.fields.userId;
