@@ -10,6 +10,7 @@ var BookStatusModel = require('../models/bookStatus');// 书籍状态模型
 var MessageModel = require('../models/messages');// 消息模型
 var SortModel = require('../models/sorts');// 类型模型
 var checkLogin = require('../middlewares/check').checkLogin;
+var recommend=require('../public/js/recommend');
 
 
 //GET /library/Sorts 获得所有分类
@@ -184,6 +185,7 @@ router.post('/bookReserve',function (req, res, next) {
                             }
                             resData.message = 'success';
                             res.send(resData);// 发送数据
+                            recommend.recommendFunction(userId);//更新推荐
                         })
                         .catch(function (err) {// 错误判断
                             resData.resources = 0;
