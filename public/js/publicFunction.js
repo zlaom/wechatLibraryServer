@@ -5,6 +5,7 @@ var Message = require('../../models/messages');
 var Book = require('../../models/books');
 var BookStatus = require('../../models/bookStatus');
 var moment = require('moment');
+var websocket = require('./webSocket');//web
 
 module.exports = {
     // 提前提醒还书
@@ -32,6 +33,7 @@ module.exports = {
                         var bookTitle = obj.bookTitle;
 
                         message.messageData = '您借的《' + bookTitle + '》还有' + jetLag + '天到期，请及时归还！';
+                        websocket.sendUseMsg(userId,message.messageData);
                         console.log(message);
                         Message.create(message);
                     })
@@ -65,6 +67,7 @@ module.exports = {
                             var bookTitle = obj.bookTitle;
 
                             message.messageData = '您借的《' + bookTitle + '》已经超期' + jetLag + '天，请尽快归还！超期将会影响你的信誉度！';
+                            websocket.sendUseMsg(userId,message.messageData);
                             console.log(message);
                             Message.create(message);
                         })

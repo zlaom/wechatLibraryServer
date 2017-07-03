@@ -8,6 +8,7 @@ module.exports = function (app) {
     app.use('/library', require('./library'));
     app.use('/personal', require('./personal'));
     app.use('/search', require('./search'));
+    app.use('/scan', require('./scan'));
     app.use('/sortSignup', require('./sortSignup'));
     app.use('/managerSignup', require('./managerSignup'));
 

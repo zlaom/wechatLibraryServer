@@ -1,12 +1,16 @@
 <%- include('header') %>
-<div class="ui grid">
-    <div class="four wide column"></div>
+<div class="ui grid breadcrumb ">
     <div class="eight wide column">
-        <h3>状态信息</h3>
+        <h3>
+            <a href="/users">用户管理</a>
+            <i class="right chevron icon divider"></i>
+            <a href="/users/<%= bstatus.userId %>/edit">用户编辑</a>
+            <i class="right chevron icon divider"></i>
+            <div class="active section">记录编辑</div>
+        </h3>
     </div>
 </div>
 <div class="ui grid">
-    <div class="four wide column"></div>
     <div class="eight wide column">
         <form class="ui form segment" method="post" enctype="multipart/form-data">
             <div class="field">

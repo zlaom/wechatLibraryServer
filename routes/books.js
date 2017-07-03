@@ -65,6 +65,7 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
     var bookAbstract = req.fields.bookAbstract;
     var bookSorts = [];
     var bookBowNum = req.fields.bookBowNum;
+    var temp=false;
     if (req.files.bookCover.size > 0) {
         var bookCover = req.files.bookCover.path.split(path.sep).pop();
     }
@@ -75,21 +76,24 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
     var bookSort1 = req.fields.bookSort1;
     var bookSort2 = req.fields.bookSort2;
     var bookSort3 = req.fields.bookSort3;
-    if (bookSort1) {
+    if (bookSort1!='null') {
         bookSorts[i] = bookSort1;
+        temp=true;
         for (var j = 0; j < bookNum; j++)
             SortModel.updateSortBkNumBySortEname(bookSort1);
         i++;
     }
-    if (bookSort2 && bookSort2 != bookSort1) {
+    if (bookSort2!='null' && bookSort2 != bookSort1) {
         bookSorts[i] = bookSort2;
+        temp=true
         for (var j = 0; j < bookNum; j++)
             SortModel.updateSortBkNumBySortEname(bookSort2);
         i++;
     }
-    if (bookSort3 && bookSort3 != bookSort1) {
+    if (bookSort3!='null' && bookSort3 != bookSort1) {
         if (bookSort3 != bookSort2) {
             bookSorts[i] = bookSort3;
+            temp=true
             for (var j = 0; j < bookNum; j++)
                 SortModel.updateSortBkNumBySortEname(bookSort3);
             i++;
@@ -103,11 +107,13 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
         bookTitle: bookTitle,
         bookAuthor: bookAuthor,
         bookPress: bookPress,
-        bookSorts: bookSorts,
         bookAbstract: bookAbstract,
         bookNum: parseInt(bookNum),
         bookBowNum: parseInt(bookBowNum)
     };
+    if(temp){
+        book.bookSorts=bookSorts;
+    }
     // 重新设置了封面
     if (bookCover) {
         book.bookCover = bookCover;

@@ -1,3 +1,5 @@
 config/*
 !config/default.*
 node_modules/*
+public/img/*
+!public/img

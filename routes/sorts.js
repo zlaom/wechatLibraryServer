@@ -31,6 +31,9 @@ router.get('/:sortId/edit', checkLogin, function (req, res, next) {
                 throw new Error('该分类不存在');
             }
             BookModel.getBooksBySort(sort.sortName).then(function (books) {
+                for(var i=0;i<books.length;i++){
+                    books[i].sortId=sortId;
+                }
                 res.render('sortEdit', {
                     sort: sort,
                     books: books
@@ -41,7 +44,7 @@ router.get('/:sortId/edit', checkLogin, function (req, res, next) {
         .catch(next);
 });
 
-// POST /sorts/:sortId/sortEdit 更新一本书
+// POST /sorts/:sortId/sortEdit 更新一个分类
 router.post('/:sortId/edit', checkLogin, function (req, res, next) {
     // 获取变量值
     var sortId = req.params.sortId;
@@ -50,7 +53,16 @@ router.post('/:sortId/edit', checkLogin, function (req, res, next) {
     if (req.files.sortCover.size > 0) {
         var sortCover = req.files.sortCover.path.split(path.sep).pop();
     }
-
+    // 校验参数
+    try {
+        if (!sortName) {
+            throw new Error('请填写分类名称');
+        }
+    } catch (e) {
+        // 编辑失败
+        req.flash('error', e.message);
+        return res.redirect(`/sorts/${sortId}/edit`);
+    }
     //模板赋值
     var sort = {
         sortName: sortName,
@@ -89,6 +101,109 @@ router.get('/:sortId/remove', checkLogin, function (req, res, next) {
             res.redirect('/sorts');
         })
         .catch(next);
+});
+
+// GET /sort/book/:bookId/edit 更新分类书本页面
+router.get('/:sortId/book/:bookId/edit', checkLogin, function (req, res, next) {
+    var bookId = req.params.bookId;
+    var sortId= req.params.sortId;
+
+    BookModel.getBookByBookId(bookId)
+        .then(function (book) {
+            if (!book) {
+                throw new Error('该书本不存在');
+            }
+            SortModel.showSorts().then(function (sorts) {
+                res.render('sortBookEdit', {
+                    sortId:sortId,
+                    book: book,
+                    sorts: sorts
+                });
+            })
+        })
+        .catch(next);
+});
+
+// POST /sorts/:sortId/book/:bookId/edit 更新一本书
+router.post('/:sortId/book/:bookId/edit', checkLogin, function (req, res, next) {
+    // 获取变量值
+    var sortId=req.params.sortId;
+    var id=req.params.bookId;
+    var bookId = req.fields.bookId;
+    var bookTitle = req.fields.bookTitle;
+    var bookAuthor = req.fields.bookAuthor;
+    var bookPress = req.fields.bookPress;
+    var bookNum = req.fields.bookNum;
+    var bookAbstract = req.fields.bookAbstract;
+    var bookSorts = [];
+    var bookBowNum = req.fields.bookBowNum;
+    var temp=false;
+    if (req.files.bookCover.size > 0) {
+        var bookCover = req.files.bookCover.path.split(path.sep).pop();
+    }
+
+    // 根据checkbox判断并写入bookSorts
+    var i = 0;
+    var bookNum = req.fields.bookNum;
+    var bookSort1 = req.fields.bookSort1;
+    var bookSort2 = req.fields.bookSort2;
+    var bookSort3 = req.fields.bookSort3;
+    if (bookSort1!='null') {
+        bookSorts[i] = bookSort1;
+        temp=true;
+        for (var j = 0; j < bookNum; j++)
+            SortModel.updateSortBkNumBySortEname(bookSort1);
+        i++;
+    }
+    if (bookSort2!='null' && bookSort2 != bookSort1) {
+        bookSorts[i] = bookSort2;
+        temp=true
+        for (var j = 0; j < bookNum; j++)
+            SortModel.updateSortBkNumBySortEname(bookSort2);
+        i++;
+    }
+    if (bookSort3!='null' && bookSort3 != bookSort1) {
+        if (bookSort3 != bookSort2) {
+            bookSorts[i] = bookSort3;
+            temp=true
+            for (var j = 0; j < bookNum; j++)
+                SortModel.updateSortBkNumBySortEname(bookSort3);
+            i++;
+        }
+
+    }
+
+    //模板赋值
+    var book = {
+        bookId: bookId,
+        bookTitle: bookTitle,
+        bookAuthor: bookAuthor,
+        bookPress: bookPress,
+        bookAbstract: bookAbstract,
+        bookNum: parseInt(bookNum),
+        bookBowNum: parseInt(bookBowNum)
+    };
+    if(temp){
+        book.bookSorts=bookSorts;
+    }
+    // 重新设置了封面
+    if (bookCover) {
+        book.bookCover = bookCover;
+    }
+    BookModel.updateBookById(id, book)
+        .then(function () {
+            req.flash('success', '编辑书本成功');
+            // 编辑成功后跳转到上一页
+            res.redirect(`/sorts/${sortId}/book/${id}/edit`);
+        })
+        .catch(function (e) {
+            fs.unlink(req.files.bookCover.path);
+            if (e.message.match('E11000 duplicate key')) {
+                req.flash('error', '条形码已被占用');
+                return res.redirect(`/sorts/${sortId}/book/${id}/edit`);
+            }
+            next(e);
+        });
 });
 
 module.exports = router;

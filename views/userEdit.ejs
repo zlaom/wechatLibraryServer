@@ -1,33 +1,51 @@
 <%- include('header') %>
-<div class="ui grid">
+<div class="ui grid breadcrumb ">
     <div class="eight wide column">
-        <h3>用户信息编辑</h3>
+        <h3>
+            <a href="/users">用户管理</a>
+            <i class="right chevron icon divider"></i>
+            <div class="active section">用户编辑</div>
+        </h3>
     </div>
 </div>
 <div class="ui grid">
     <div class="sixteen wide column">
-        <form class="ui form segment" method="post" enctype="multipart/form-data">
-            <div class="ui grid">
+       <!-- <form class="ui form segment" method="post" enctype="multipart/form-data">-->
+            <div class="ui grid ">
                 <div class="eight wide column">
+                    <form name="form1"  class="ui form segment" method="post" enctype="multipart/form-data">
                     <div class="field">
                         <label>用户名</label>
                         <p><%= user.userId %></p>
                     </div>
-                </div>
-                <div class="eight wide column">
                     <div class="field required">
                         <label>电话</label>
-                        <input placeholder="书名" type="text" name="phone" value="<%= user.phone %>">
+                        <input placeholder="电话" type="text" name="phone" value="<%= user.phone %>">
                     </div>
                     <div class="field required">
                         <label>身份证</label>
-                        <input placeholder="作者" type="text" name="idCard" value="<%= user.idCard %>">
+                        <input placeholder="身份证" type="text" name="idCard" value="<%= user.idCard %>">
                     </div>
+                    <input type="submit" class="ui button fluid" value="修改">
+                    </form>
+                </div>
+                <div class="eight wide column">
+                    <form name="form2"  class="ui form segment" method="post" enctype="multipart/form-data">
+                    <div class="field ">
+                        <label>通知</label>
+                        <textarea name="message" rows="8" placeholder="message to <%= user.userId %>"></textarea>
+                    </div>
+                    <div class="ui grid">
+                        <div class="twelve wide column"></div>
+                        <div class="four wide column">
+                            <input type="submit" class="ui button fluid" value="发送">
+                        </div>
+                    </div>
+                    </form>
                 </div>
             </div>
             <div style="height: 10px"></div>
-            <input type="submit" class="ui button fluid" value="修改">
-        </form>
+      <!--  </form>-->
     </div>
 </div>
 <div class="ui grid">

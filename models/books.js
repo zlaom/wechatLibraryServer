@@ -74,5 +74,15 @@ module.exports = {
     // 通过bookId更新数据
     updateBookById: function updateBookById(bookId, data) {
         return Book.update({bookId: bookId}, {$set: data}).exec();
+    },
+
+    // 按照借阅热度排序查询一定范围内的数据
+    findSortBrow:function findSortBrow(skipNum,limitNum){
+        return Book.find()
+            .sort({bookBowNum:-1})
+            .skip(skipNum)
+            .limit(limitNum)
+            .exec();
     }
+
 };

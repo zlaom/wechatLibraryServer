@@ -23,16 +23,30 @@ router.post('/', checkLogin, function (req, res, next) {
     var sortName = req.fields.sortName;
     var sortCover = req.files.sortCover.path.split(path.sep).pop();
     var sortBkNum = 0;
+    // 校验参数
+    try {
+        if (!sortName) {
+            throw new Error('请填写分类名称');
+        }
+        if (!req.files.sortCover.name) {
+            throw new Error('选择封面文件');
+        }
+    } catch (e) {
+        // 注册失败，异步删除上传的头像
+        fs.unlink(req.files.sortCover.path);
+        req.flash('error', e.message);
+        return res.redirect('/sortSignup');
+    }
     //模板赋值
     var sort = {
         sortName: sortName,
-        sortCover: sortCover,
-        sortBkNum: sortBkNum
+        sortCover: sortCover
     };
 
     SortModel.create(sort)
         .then(function () {
-        res.redirect('/sorts');
+            req.flash('success', '类别注册成功');
+            res.redirect('/sortSignup');
         })
         .catch(function (e) {
             // 用分类名称被占用则跳回分类注册页，而不是错误页

@@ -6,6 +6,7 @@ var BookStatus = require('../lib/mongo').BookStatus;
 
 module.exports = {
 
+
     // 通过bookId预约一本书
     bookStatus: function bookStatus(bookStatus) {
         return BookStatus.create(bookStatus).exec();
@@ -92,6 +93,41 @@ module.exports = {
     // 根据id更改状态
     updateStatusById: function updateStatusById(id, data) {
         return BookStatus.update({_id: id}, {$set: data}).exec();
-    }
+    },
 
+    getBookStatusBy_id:function getBookStatusBy_id(_id) {
+        return BookStatus.findOne({'_id':_id}).exec();
+    },
+    //通过_id查找，并更新状态
+    updateBookStatusBy_id:function updateBookStatusBy_id(_id,type) {
+        return BookStatus.update({'_id':_id},{$set:{'type':type}}).exec();
+
+    },
+    // 找到下一个可以拿到这本书的预约用户
+    findNextReserveUser: function findNextReserveUser(){
+       return  BookStatus.find({'type': 'reserve'}).sort({'createTime': 1}).limit(1).exec()
+    },
+
+    // 查找用户状态type不为某个值的记录
+    findNotType:function findNotType(userId,type){
+        return BookStatus.find({userId:userId,type:{$nin:type}}).exec();
+    },
+
+    // 查找用户状态type不为某个值的记录
+    findLimitNotType:function findLimitNotType(userId,type,limitNum){
+        return BookStatus.find({userId:userId,type:{$nin:type}})
+            .sort({_id:-1})
+            .limit(limitNum)
+            .exec();
+    },
+
+    // 返回某个用户的某个状态
+    findOneTypeByUserId:function findOneTypeByUserId(userId,type){
+        return BookStatus.find({userId:userId,type:type}).exec();
+    },
+
+    //全部更新
+    allUpDataByStatusId:function allUpDataByStatusId(statusId,status){
+        return BookStatus.update({_id:statusId},{$set:status}).exec();
+    }
 };

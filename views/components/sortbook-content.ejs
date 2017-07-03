@@ -1,0 +1,33 @@
+<div class="four wide column">
+    <div class="six wide column">
+        <div class="ui segment">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <div style="height: 120px">
+                        <img src="/img/<%= book.bookCover %>" width="70px"/>
+                    </div>
+                </div>
+                <div class="ten wide column">
+                    <h3><a href="/sorts/<%= book.sortId %>/book/<%= book.bookId %>/edit"><%= book.bookTitle %></a></h3>
+                    <p>
+                        作者：<cite><%= book.bookAuthor %></cite></br>
+                        条形码：<cite><%= book.bookId %></cite>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <span class="tag"><%= book.created_at %></span>
+                <span class="tag right">
+                         <div class="ui inline dropdown">
+                           <div class="text"></div>
+                           <i class="dropdown icon"></i>
+                           <div class="menu">
+                             <div class="item"><a href="/sorts/<%= book.sortId %>/book/<%= book.bookId %>/edit">编辑</a></div>
+                             <div class="item"><a href="/sorts/<%= book.sortId %>/book/<%= book.bookId %>/remove">删除</a></div>
+                           </div>
+                         </div>
+                      </span>
+            </div>
+        </div>
+    </div>
+</div>

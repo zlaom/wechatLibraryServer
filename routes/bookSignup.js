@@ -114,8 +114,8 @@ router.post('/', checkLogin, function (req, res, next) {
     //书籍录入
     BookModel.create(book)
         .then(function () {
-            // 跳转到主页
-            res.redirect('/books');
+            req.flash('success', '书籍注册成功');
+            res.redirect('/bookSignup');
         }) .catch(function (e) {
         fs.unlink(req.files.bookCover.path);
         if (e.message.match('E11000 duplicate key')) {

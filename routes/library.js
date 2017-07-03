@@ -137,50 +137,66 @@ router.post('/bookReserve',function (req, res, next) {
         statusId: 'null'
     };
 
-    var bookStatus = {
-        bookId: bookId,
-        userId: userId,
-        type: type,
-        resources: 0,
-        createTime: moment().toDate()
-    };
     var message = {
         userId: '',
         author: '',
         messageData: ''
     };
-
-    // 找到相关书籍
-    BookModel.getBookByBookId(bookId)
-        .then(function (obj) {
-            // 判断当前书籍是否还有可借数，有则给状态分配资源并把resources标志位置1
-            if (obj.bookCan > 0) {
-                bookStatus.resources = 1;
-                resData.resources = 1;
-            }
-            bookTitle = obj.bookTitle;
-
-            BookStatusModel.bookStatus(bookStatus)
+    // 判断当前书籍是否已经预约
+    BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, "reserve").then(function (obj) {
+        if (!obj) {
+            // 找到相关书籍
+            BookModel.getBookByBookId(bookId)
                 .then(function (obj) {
-                    resData.statusId = obj.ops[0]._id; // 获取当前生成的bookstatus的_id
-                    message.userId = userId;
-                    message.author = author;
-                    message.messageData = '您已经成功预约《' + bookTitle + '》!';
-                    // 预约信息写入
-                    MessageModel.create(message);
-                    // 使书本可借数减一
-                    if (resData.resources == 1) {
-                        BookModel.bookCanCut(bookId);
+                    //写入状态信息
+                    var bookStatus = {
+                        bookId: bookId,
+                        bookTitle: obj.bookTitle,
+                        bookCover: obj.bookCover,
+                        bookAuthor: obj.bookAuthor,
+                        bookPress: obj.bookPress,
+                        bookSorts:obj.bookSorts,
+                        userId: userId,
+                        type: type,
+                        resources: 0,
+                        updateTime: moment().toDate()
+                    };
+                    /*   console.log(moment().format('M')+'月'+moment().format('M')+'日'+moment().add(2,'days').format('M,D'));*/
+
+                    // 判断当前书籍是否还有可借数，有则给状态分配资源并把resources标志位置1
+                    if (obj.bookCan > 0) {
+                        bookStatus.resources = 1;
+                        resData.resources = 1;
+                        bookStatus.returnTime=moment().add(2,'days').toDate()
                     }
-                    resData.message = 'success';
-                    res.send(resData);// 发送数据
-                })
-                .catch(function (err) {// 错误判断
-                    resData.resources = 0;
-                    resData.message = '预约失败！';
-                    res.send(resData);// 发送数据
+                    bookTitle = obj.bookTitle;
+                    BookStatusModel.bookStatus(bookStatus)
+                        .then(function (obj) {
+                            resData.statusId = obj.ops[0]._id; // 获取当前生成的bookstatus的_id
+                            message.userId = userId;
+                            message.author = author;
+                            message.messageData = '您已经成功预约《' + bookTitle + '》!';
+                            // 预约信息写入
+                            MessageModel.create(message);
+                            // 使书本可借数减一
+                            if (resData.resources == 1) {
+                                BookModel.bookCanCut(bookId);
+                            }
+                            resData.message = 'success';
+                            res.send(resData);// 发送数据
+                        })
+                        .catch(function (err) {// 错误判断
+                            resData.resources = 0;
+                            resData.message = '预约失败！';
+                            res.send(resData);// 发送数据
+                        });
                 });
-        });
+        }else {
+            resData.message = '预约失败！';
+            res.send(resData);
+        }
+    });
+
 });
 
 // POST /library/cancelReserve取消预订操作

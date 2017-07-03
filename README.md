@@ -187,12 +187,16 @@ $ pm2 start index.js
 - 进行访问测试
 
 ## 更新日志
-- 2017-6-29 新增README文件
+- 2017-6-29
+  - 新增README文件
+- 2017-9-30
+  - 全新管理员工具界面，更简洁直观
+  - 微信端管理员借书还书工具
 
 ## 贡献者
-- Zhang LaoMing  
-- Gao HaoRan
-- Liu MingYang
+- LaoMing Zhang
+- HaoRan Gao
+- MingYang Liu
 
 Email：vtrust32@gmail.com
 

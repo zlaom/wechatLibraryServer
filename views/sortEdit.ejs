@@ -1,7 +1,11 @@
 <%- include header %>
-<div class="ui grid">
+<div class="ui grid breadcrumb ">
     <div class="eight wide column">
-        <h3>类别信息</h3>
+        <h3>
+            <a href="/sorts">类别管理</a>
+            <i class="right chevron icon divider"></i>
+            <div class="active section">类别编辑</div>
+        </h3>
     </div>
 </div>
 <div class="ui grid">
@@ -39,7 +43,7 @@
 <div class="post-content">
     <div class="ui grid">
         <% books.forEach(function (book) { %>
-        <%- include('components/book-content', { book: book }) %>
+        <%- include('components/sortbook-content', { book: book }) %>
         <% }) %>
     </div>
 </div>

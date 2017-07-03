@@ -7,6 +7,7 @@ var moment = require('moment');
 var router = express.Router();
 var UserModel = require('../models/users');// 用户模型
 var BookStatusModel = require('../models/bookStatus');
+var websocket = require('../public/js/webSocket');//websocket
 
 var checkLogin = require('../middlewares/check').checkLogin;
 
@@ -40,24 +41,35 @@ router.get('/:userId/edit', checkLogin, function (req, res, next) {
 
 // POST /users/:userId/edit 更新用户信息
 router.post('/:userId/edit', checkLogin, function (req, res, next) {
-    // 获取变量值
+    console.log("66666666666666");
     var _id = req.params.userId;
-    var phone = req.fields.phone;
-    var idCard = req.fields.idCard;
+    if(req.fields.message){
+        var message=req.fields.message;
+        console.log(message);
+        websocket.sendUseMsg(_id,message);
+        req.flash('success', '发送通知成功');
+        // 编辑成功后跳转到上一页
+        res.redirect(`/users/${_id}/edit`);
+    }else{
+        // 获取变量值
+        var phone = req.fields.phone;
+        var idCard = req.fields.idCard;
 
-    //模板赋值
-    var user = {
-        phone: phone,
-        idCard: idCard
-    };
-    UserModel.updateUserById(_id, user)
-        .then(function () {
-            console.log("成功");
-            req.flash('success', '编辑用户成功');
-            // 编辑成功后跳转到上一页
-            res.redirect(`/users/${_id}/edit`);
-        })
-        .catch(next);
+        //模板赋值
+        var user = {
+            phone: phone,
+            idCard: idCard
+        };
+        UserModel.updateUserById(_id, user)
+            .then(function () {
+                console.log("成功");
+                req.flash('success', '编辑用户成功');
+                // 编辑成功后跳转到上一页
+                res.redirect(`/users/${_id}/edit`);
+            })
+            .catch(next);
+    }
+
 });
 
 // GET /users/:userId/remove 删除一个用户
@@ -98,8 +110,15 @@ router.post('/:userId/status/:statusId/edit', checkLogin, function (req, res, ne
     //模板赋值
     var status = {
         bookId: bookId,
-        type: type
+        type: type,
+        updateTime:moment().toDate()
     };
+    if(type=='borrow'){
+        status.returnTime=moment().add(1,'M').toDate();
+    }
+    if(type=='reserve'){
+        status.returnTime=moment().add(2,'d').toDate();
+    }
     BookStatusModel.updateStatusById(_id, status)
         .then(function () {
             console.log("成功");
