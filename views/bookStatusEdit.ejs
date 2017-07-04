@@ -26,8 +26,12 @@
                 <input type="text" name="bookId" value="<%= bstatus.bookId %>">
             </div>
             <div class="field required">
-                <label>状态类型[reserve/borrow/cancelRe]</label>
-                <input  type="text" name="type" value="<%= bstatus.type %>">
+                <label>状态类型</label>
+                <select class="ui fluid search dropdown" name="type">
+                    <option value="reserve" <% if(bstatus.type =='reserve'){%>selected = "selected"<%}%>>已预约</option>
+                    <option value="cancelRe" <% if(bstatus.type =='cancelRe'){%>selected = "selected"<%}%>>取消预约</option>
+                    <option value="borrow" <% if(bstatus.type =='borrow'){%>selected = "selected"<%}%>>已借</option>
+                </select>
             </div>
             <input type="submit" class="ui button fluid" value="修改">
         </form>

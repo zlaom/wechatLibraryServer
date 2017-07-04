@@ -42,7 +42,7 @@
                             <option value="null">未选择</option>
                             <% sorts.forEach(function (sort) { %>
                             <option value="<%= sort.sortName %>" <% if(sort.sortName==book.bookSorts[0]){%>selected = "selected"<%}%> >
-                                <%= sort.sortName %>
+                            <%= sort.sortName %>
                             </option>
                             <% }) %>
                         </select>

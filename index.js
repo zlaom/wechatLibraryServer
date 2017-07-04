@@ -16,8 +16,8 @@ const WebSocket = require('ws');
 var websocket = require('./public/js/webSocket');//web
 // 轮询消息提醒机制
 var cycle = require('./public/js/cycle');
-/*var re=require('./public/js/recommend');
-re.recommendFunction('Vtrust');*/
+var re=require('./public/js/recommend');
+re.recommendFunction('Vtrust');
 
 var app = express();
 const server = http.createServer(app);
