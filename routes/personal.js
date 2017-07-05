@@ -1,9 +1,6 @@
 /**
  * Created by 14798 on 2017/5/8.
  */
-/**
- * Created by Damian on 2017/4/20.
- */
 var express = require('express');
 var router = express.Router();
 var User = require('../models/users');
@@ -34,7 +31,7 @@ router.get('/', function (req, res, next) {// 获得个人主页需要的数据
                             bookTitle: bBooks[i].bookTitle,
                             bookCover: bBooks[i].bookCover,
                             resources: bBooks[i].resources,
-                            returnTime: moment(bBooks[i].returnTime).format('M') + '月' + moment(bBooks[i].returnTime).format('D') + '日'
+                            returnTime: moment(bBooks[i].returnTime).format('M') + '月' + moment(bBooks[i].returnTime).format('D') + '日还'
                         };
                         data.borrowBook.push(oneBook1);
                     }
@@ -44,8 +41,11 @@ router.get('/', function (req, res, next) {// 获得个人主页需要的数据
                             bookTitle: rBooks[i].bookTitle,
                             bookCover: rBooks[i].bookCover,
                             resources: rBooks[i].resources,
-                            returnTime: moment(rBooks[i].returnTime).format('M') + '月' + moment(rBooks[i].returnTime).format('D') + '日'
+                            returnTime: '等待资源'
                         };
+                        if(rBooks[i].resources>0){
+                            oneBook2.returnTime='保留至'+moment(rBooks[i].returnTime).format('M') + '月' + moment(rBooks[i].returnTime).format('D') + '日'
+                        }
                         console.log(moment(rBooks[i].returnTime).format('M,d'));
                         console.log(moment().format('M,d'));
                         data.reserveBook.push(oneBook2);

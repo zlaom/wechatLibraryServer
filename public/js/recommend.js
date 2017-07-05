@@ -284,11 +284,9 @@ module.exports = {
                 console.log(books);
                 BookStatus.findOneTypeByUserId(userId, 'recommend').then(function (status) {
                     var temp;//执行标志位
-                    console.log('status.length');
-                    console.log(status.length);
                     if (status.length == 0) {// 当原推荐数目为零时
                         temp = 1;
-                    } else if (books.length >= bookNum && status.length > bookNum) {
+                    } else if (books.length >= bookNum && status.length >= bookNum) {
                         temp = 2;
                     } else if (books.length >= bookNum && status.length < bookNum) {
                         temp = 3;
@@ -296,7 +294,7 @@ module.exports = {
                         temp = 4;
                     } else if (books.length < bookNum && status.length <= bookNum && books.length >= status.length) {
                         temp = 5;
-                    } else if (books.length < bookNum && status.length <= bookNum && books.length <= status.length) {
+                    } else if (books.length < bookNum && status.length <= bookNum && books.length < status.length) {
                         temp = 6;
                     } else {
                         temp = 7;

@@ -26,6 +26,8 @@ router.post('/', checkLogin, function (req, res, next) {
     // 获取变量值
     var bookId = req.fields.bookId;
     var bookTitle = req.fields.bookTitle;
+    var bookCompleteSpelling=req.fields.bookCompleteSpelling;
+    var bookInitial=req.fields.bookInitial;
     var bookCover = req.files.bookCover.path.split(path.sep).pop();
     var bookAuthor = req.fields.bookAuthor;
     var bookPress = req.fields.bookPress;
@@ -72,6 +74,12 @@ router.post('/', checkLogin, function (req, res, next) {
         if (!bookTitle) {
             throw new Error('请填写书名');
         }
+        if (!bookInitial) {
+            throw new Error('请填写首字母');
+        }
+        if (!bookCompleteSpelling) {
+            throw new Error('请填写全拼');
+        }
         if (!req.files.bookCover.name) {
             throw new Error('选择封面文件');
         }
@@ -101,6 +109,8 @@ router.post('/', checkLogin, function (req, res, next) {
     var book = {
         bookId: bookId,
         bookTitle: bookTitle,
+        bookCompleteSpelling:bookCompleteSpelling,
+        bookInitial:bookInitial,
         bookCover: bookCover,
         bookAuthor: bookAuthor,
         bookPress: bookPress,

@@ -41,8 +41,8 @@ module.exports = {
     },
 
     // 通过用户id和图书id更新一个状态
-    updateStatusByUserBook: function updateStatusByUserBook(userId, bookId, type) {
-        return BookStatus.update({userId: userId, bookId: bookId}, {$set: {type: type}}).exec();
+    updateStatusByUserBook: function updateStatusByUserBook(userId, bookId, type1,type2) {
+        return BookStatus.update({userId: userId, bookId: bookId,type:type1}, {$set: {type: type2}}).exec();
     },
 
     // 通过用户id和图书id更新获得资源数

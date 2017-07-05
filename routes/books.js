@@ -122,7 +122,7 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
         .then(function () {
             req.flash('success', '编辑书本成功');
             // 编辑成功后跳转到上一页
-            res.redirect(`/books/${id}/edit`);
+            res.redirect(`/books/${bookId}/edit`);
         })
         .catch(function (e) {
             fs.unlink(req.files.bookCover.path);

@@ -207,7 +207,7 @@ router.post('/cancelReserve', function (req, res, next) {
     var userId = req.fields.userId;
     var bookId = req.fields.bookId;
     var author = "图书馆管理员";
-    var type = "reserve";
+    var type1 = "reserve";
     var resData = {
         message: '',
         resources: 0
@@ -220,17 +220,21 @@ router.post('/cancelReserve', function (req, res, next) {
     };
 
     // 找到相关书籍的预约状态
-    BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, type)
-        .then(function (obj) {
+    BookStatusModel.getBookStatusByUserIdBookIdType(userId, bookId, type1)
+        .then(function (obj1) {
+            console.log('obj1');
+            console.log(obj1);
             // 得到当前状态分配的资源数
-            var resources = obj.resources;
+            var resources = obj1.resources;
             resData.resources = resources;
             // 更新预约信息为取消预约
-            type = "cancelRe";
-            BookStatusModel.updateStatusByUserBook(userId, bookId, type)
-                .then(function (obj) {
+            type2 = "cancelRe";
+            BookStatusModel.updateStatusByUserBook(userId, bookId,type1,type2)
+                .then(function (obj2) {
+                    console.log('obj2');
+                    console.log(obj2);
                     // 判断是否存在相关记录
-                    if (!obj.result.n) {//result.n为1表示有这个记录
+                    if (!obj2.result.n) {//result.n为1表示有这个记录
                         res.send("取消失败！未找到相关记录。");
                     } else {
                         // 若当前状态持有资源则使书本可借数加一
@@ -240,14 +244,14 @@ router.post('/cancelReserve', function (req, res, next) {
                         }
 
                         // 使此状态持有资源数清零
-                        BookStatusModel.updateStatusResourcesByUserBookType(userId, bookId, type, 0);
+                        BookStatusModel.updateStatusResourcesByUserBookType(userId, bookId, type2, 0);
 
                         // 先找到书本名字然后写入取消预约消息
                         BookModel.getBookByBookId(bookId)
-                            .then(function (obj) {
+                            .then(function (obj3) {
                                 message.userId = userId;
                                 message.author = author;
-                                message.messageData = '您已经成功取消预约《' + obj.bookTitle + '》!';
+                                message.messageData = '您已经成功取消预约《' + obj3.bookTitle + '》!';
                                 // 写入取消预约消息
                                 MessageModel.create(message);
                             });
@@ -261,6 +265,7 @@ router.post('/cancelReserve', function (req, res, next) {
                 });
         });
 });
+
 
 // 借书操作
 

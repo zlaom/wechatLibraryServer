@@ -16,94 +16,15 @@ const WebSocket = require('ws');
 var websocket = require('./public/js/webSocket');//web
 // 轮询消息提醒机制
 var cycle = require('./public/js/cycle');
+/*
 var re=require('./public/js/recommend');
 re.recommendFunction('Vtrust');
+*/
 
 var app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
 websocket.websocket(wss);
-/*
-const wss = new WebSocket.Server({ server });
-var users=[];
-var i=0;
-
-wss.on('connection', function connection(socket) {
-    console.log("有新客户端连接!");
-
-    // 构造客户端对象
-    var newclient = {
-        socket:socket,
-        name:false
-    };
-    socket.on('message', function incoming(msg) {
-        var currentTime = getTime();
-        // 判断是不是第一次连接，以第一条消息作为用户名
-        if(!newclient.name){
-            newclient.name = msg;
-            users[i++]=newclient;
-            console.log(users);
-            wss.clients.forEach(function each(client) {
-/!*                if (client.readyState === WebSocket.OPEN) {
-                    client.send("welcome_系统管理员_" + currentTime + "_欢迎" + msg + "加入聊天！");
-                }*!/
-            });
-            console.log(newclient.name + "加入连接。");
-        }
-        else{
-            var client=msg.client;
-            var data=msg.data;
-           /!* console.log( wss.clients);*!/
-            users.forEach(function each(user) {
-                if(user.name=='vtrust'){
-                    user.socket.send("管理员"+msg);
-                }
-            });
-/!*            wss.clients.forEach(function each(client) {
-                if (client !== socket && client.readyState === WebSocket.OPEN) {
-                    client.send("other_" + newclient.name + "_" + currentTime + "_" + msg);
-                }
-                else if(client == socket){
-                    client.send("self_" + newclient.name + "_" + currentTime + "_" + msg);
-                }
-                console.log(newclient.name + "于" + currentTime + "说：" + msg);
-            });*!/
-        }
-    });
-
-    socket.on('close', function close() {
-        var currentTime = getTime();
-        wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send("leave_系统管理员_" + currentTime + "_" + newclient.name + "断开了连接");
-            }
-            console.log(newclient.name + "离开聊天。");
-        });
-    });
-});
-
-var getTime=function(){
-    var date = new Date();
-    return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-
-
-
 
 /*
 // 本地HTTPS测试
