@@ -39,5 +39,10 @@ module.exports = {
     // 根据Id更改用户信息
     updateUserById: function updateUserById(id, data) {
         return User.update({userId: id}, {$set: data}).exec();
+    },
+
+    //设置通知类型
+    updateUserMessageById: function updateUserMessageById(id, type) {
+        return User.update({userId: id}, {$set: {remindLevel:type}}).exec();
     }
 };

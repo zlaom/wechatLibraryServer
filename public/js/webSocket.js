@@ -2,6 +2,8 @@
  * 实现websocket给特定用户发送消息的方法。
  * @type {*}
  */
+var MessageModel = require('../../models/messages');// 消息模型
+var UserModel = require('../../models/users');
 var users = [];
 var i = 0;
 
@@ -32,12 +34,25 @@ module.exports = {
             });
         });
     },
-    sendUseMsg:function sendUseMsg(name,msg) {
+    sendUseMsg:function sendUseMsg(author,userId,msg,type) {
+        var send=false;
+        var message = {
+            userId: userId,
+            author: author,
+            messageData: msg
+        };
+        MessageModel.create(message);
         users.forEach(function user(user){
             if(user.name==name){
+                console.log("已发送");
                 user.socket.send(msg);
+                send =true;
             }
-        })
+        });
+        if(!send){
+            UserModel.updateUserMessageById(userId,type);
+            console.log("已更新");
+        }
     }
 
 };

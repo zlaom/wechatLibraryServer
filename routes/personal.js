@@ -18,53 +18,56 @@ router.get('/', function (req, res, next) {// 获得个人主页需要的数据
         'borrowBook': [],
         'reserveBook': [],
         'recommendBook': [],
-        'remind': 0
+        'remind': 0,
+        'remindLevel':0
     };
 
     BookStatus.findOneTypeByUserId(userId, 'borrow').then(function (bBooks) {//找到该预约书的状态
         BookStatus.findOneTypeByUserId(userId, 'reserve').then(function (rBooks) {// 找到该用户借的状态
             BookStatus.findOneTypeByUserId(userId, 'recommend').then(function (cBooks) {// 找到该用户借的状态
                 Message.getMessagesByUserId(userId).then(function (messages) {// 获取消息数量
-                    for (var i = 0; i < bBooks.length; i++) {// 获得已借书的信息
-                        var oneBook1 = {
-                            bookId: bBooks[i].bookId,
-                            bookTitle: bBooks[i].bookTitle,
-                            bookCover: bBooks[i].bookCover,
-                            resources: bBooks[i].resources,
-                            returnTime: moment(bBooks[i].returnTime).format('M') + '月' + moment(bBooks[i].returnTime).format('D') + '日还'
-                        };
-                        data.borrowBook.push(oneBook1);
-                    }
-                    for (var i = 0; i < rBooks.length; i++) {// 获得预约的信息
-                        var oneBook2 = {
-                            bookId: rBooks[i].bookId,
-                            bookTitle: rBooks[i].bookTitle,
-                            bookCover: rBooks[i].bookCover,
-                            resources: rBooks[i].resources,
-                            returnTime: '等待资源'
-                        };
-                        if(rBooks[i].resources>0){
-                            oneBook2.returnTime='保留至'+moment(rBooks[i].returnTime).format('M') + '月' + moment(rBooks[i].returnTime).format('D') + '日'
+                    User.getUserById(userId).then(function (user) {
+                        for (var i = 0; i < bBooks.length; i++) {// 获得已借书的信息
+                            var oneBook1 = {
+                                bookId: bBooks[i].bookId,
+                                bookTitle: bBooks[i].bookTitle,
+                                bookCover: bBooks[i].bookCover,
+                                resources: bBooks[i].resources,
+                                returnTime: moment(bBooks[i].returnTime).format('M') + '月' + moment(bBooks[i].returnTime).format('D') + '日还'
+                            };
+                            data.borrowBook.push(oneBook1);
                         }
-                        console.log(moment(rBooks[i].returnTime).format('M,d'));
-                        console.log(moment().format('M,d'));
-                        data.reserveBook.push(oneBook2);
-                    }
-                    for (var i = 0; i < cBooks.length; i++) { //推荐书籍
-                        var oneBook3 = {
-                            bookId: cBooks[i].bookId,
-                            bookTitle: cBooks[i].bookTitle,
-                            bookCover: cBooks[i].bookCover,
-                            resources: cBooks[i].resources
-                        };
-                        data.recommendBook.push(oneBook3);
-                    }
-
-                    data.remind = messages.length;
-                    console.log(data);
-                    return res.send(data);
-                })
-            })
+                        for (var i = 0; i < rBooks.length; i++) {// 获得预约的信息
+                            var oneBook2 = {
+                                bookId: rBooks[i].bookId,
+                                bookTitle: rBooks[i].bookTitle,
+                                bookCover: rBooks[i].bookCover,
+                                resources: rBooks[i].resources,
+                                returnTime: '等待资源'
+                            };
+                            if(rBooks[i].resources>0){
+                                oneBook2.returnTime='保留至'+moment(rBooks[i].returnTime).format('M') + '月' + moment(rBooks[i].returnTime).format('D') + '日'
+                            }
+                            console.log(moment(rBooks[i].returnTime).format('M,d'));
+                            console.log(moment().format('M,d'));
+                            data.reserveBook.push(oneBook2);
+                        }
+                        for (var i = 0; i < cBooks.length; i++) { //推荐书籍
+                            var oneBook3 = {
+                                bookId: cBooks[i].bookId,
+                                bookTitle: cBooks[i].bookTitle,
+                                bookCover: cBooks[i].bookCover,
+                                resources: cBooks[i].resources
+                            };
+                            data.recommendBook.push(oneBook3);
+                        }
+                        data.remindLevel=user.remindLevel;
+                        data.remind = messages.length;
+                        console.log(data);
+                        return res.send(data);
+                    });
+                });
+            });
         });
     });
 });
@@ -88,6 +91,7 @@ router.get('/personDetail', function (req, res, next) {
 // 获得消息数据
 router.get('/messages', function (req, res, next) {
     var userId = req.query.userId;
+    User.updateUserMessageById(userId,'0');
     Message.getMessagesByUserId(userId)
         .then(function (obj) {
             for (var i = 0; i < obj.length; i++) {
@@ -97,15 +101,6 @@ router.get('/messages', function (req, res, next) {
                 messagesNum: obj.length,
                 messages: obj
             };
-            /*var test = moment().format("x");
-             console.log(objectIdToTimestamp(obj[0]._id));
-             console.log(objectIdToTimestamp(obj[1]._id));
-             console.log(test-objectIdToTimestamp(obj[1]._id));
-             var time = moment(objectIdToTimestamp(obj[1]._id),"M").fromNow();
-             console.log(time);
-             console.log("m");
-             console.log(test);
-             //console.log(data);*/
             res.send(data);
         })
 });

@@ -42,11 +42,12 @@ router.get('/:userId/edit', checkLogin, function (req, res, next) {
 // POST /users/:userId/edit 更新用户信息
 router.post('/:userId/edit', checkLogin, function (req, res, next) {
     console.log("66666666666666");
+    var author="管理员";
     var _id = req.params.userId;
     if(req.fields.message){
         var message='message_'+req.fields.message;
         console.log(message);
-        websocket.sendUseMsg(_id,message);
+        websocket.sendUseMsg(author,_id,message,"3");
         req.flash('success', '发送通知成功');
         // 编辑成功后跳转到上一页
         res.redirect(`/users/${_id}/edit`);
