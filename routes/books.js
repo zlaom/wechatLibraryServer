@@ -11,10 +11,14 @@ var BookModel = require('../models/books');// 书籍模型
 var BookStatusModel = require('../models/bookStatus');// 书籍状态模型
 var SortModel = require('../models/sorts');// 类型模型
 var checkLogin = require('../middlewares/check').checkLogin;
+var tools = require('../public/js/tools');
 
 //GET /books 管理员端获得所有书籍
 router.get('/', checkLogin, function (req, res, next) {
     BookModel.getBooks().then(function (books) {
+        for (var i = 0; i < books.length; i++) {
+            books[i].bookCover = tools.imgCahnge(books[i].bookCover);
+        }
         res.render('books', {
             books: books
         });
@@ -44,6 +48,7 @@ router.get('/:bookId/edit', checkLogin, function (req, res, next) {
                 throw new Error('该书本不存在');
             }
             SortModel.showSorts().then(function (sorts) {
+                book.bookCover = tools.imgCahnge(book.bookCover);
                 res.render('bookEdit', {
                     book: book,
                     sorts: sorts
@@ -56,7 +61,7 @@ router.get('/:bookId/edit', checkLogin, function (req, res, next) {
 // POST /books/:bookId/edit 更新一本书
 router.post('/:bookId/edit', checkLogin, function (req, res, next) {
     // 获取变量值
-    var id=req.params.bookId;
+    var id = req.params.bookId;
     var bookId = req.fields.bookId;
     var bookTitle = req.fields.bookTitle;
     var bookAuthor = req.fields.bookAuthor;
@@ -65,7 +70,7 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
     var bookAbstract = req.fields.bookAbstract;
     var bookSorts = [];
     var bookBowNum = req.fields.bookBowNum;
-    var temp=false;
+    var temp = false;
     if (req.files.bookCover.size > 0) {
         var bookCover = req.files.bookCover.path.split(path.sep).pop();
     }
@@ -76,24 +81,24 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
     var bookSort1 = req.fields.bookSort1;
     var bookSort2 = req.fields.bookSort2;
     var bookSort3 = req.fields.bookSort3;
-    if (bookSort1!='null') {
+    if (bookSort1 != 'null') {
         bookSorts[i] = bookSort1;
-        temp=true;
+        temp = true;
         for (var j = 0; j < bookNum; j++)
             SortModel.updateSortBkNumBySortEname(bookSort1);
         i++;
     }
-    if (bookSort2!='null' && bookSort2 != bookSort1) {
+    if (bookSort2 != 'null' && bookSort2 != bookSort1) {
         bookSorts[i] = bookSort2;
-        temp=true
+        temp = true
         for (var j = 0; j < bookNum; j++)
             SortModel.updateSortBkNumBySortEname(bookSort2);
         i++;
     }
-    if (bookSort3!='null' && bookSort3 != bookSort1) {
+    if (bookSort3 != 'null' && bookSort3 != bookSort1) {
         if (bookSort3 != bookSort2) {
             bookSorts[i] = bookSort3;
-            temp=true
+            temp = true
             for (var j = 0; j < bookNum; j++)
                 SortModel.updateSortBkNumBySortEname(bookSort3);
             i++;
@@ -111,8 +116,8 @@ router.post('/:bookId/edit', checkLogin, function (req, res, next) {
         bookNum: parseInt(bookNum),
         bookBowNum: parseInt(bookBowNum)
     };
-    if(temp){
-        book.bookSorts=bookSorts;
+    if (temp) {
+        book.bookSorts = bookSorts;
     }
     // 重新设置了封面
     if (bookCover) {
@@ -148,12 +153,18 @@ router.get('/search', function (req, res, next) {
                         books: ''
                     });
                 } else {
+                    for (var i = 0; i < books.length; i++) {
+                        books[i].bookCover = tools.imgCahnge(books[i].bookCover);
+                    }
                     res.render('books', {
                         books: books
                     });
                 }
             });
         } else {
+            for (var i = 0; i < books.length; i++) {
+                books[i].bookCover = tools.imgCahnge(books[i].bookCover);
+            }
             res.render('books', {
                 books: books
             });

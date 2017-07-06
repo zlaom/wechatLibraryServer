@@ -9,12 +9,16 @@ var moment = require('moment');
 var router = express.Router();
 var SortModel = require('../models/sorts');// 分类模型
 var BookModel = require('../models/books');//书籍模型
+var tools=require('../public/js/tools');
 
 var checkLogin = require('../middlewares/check').checkLogin;
 
 // 获得所有分类
 router.get('/', function (req, res, next) {
     SortModel.showSorts().then(function (sorts) {
+        for(var i=0;i<sorts.length;i++){
+            sorts[i].sortCover=tools.imgCahnge(sorts[i].sortCover);
+        }
         res.render('sorts', {
             sorts: sorts
         });
@@ -33,7 +37,9 @@ router.get('/:sortId/edit', checkLogin, function (req, res, next) {
             BookModel.getBooksBySort(sort.sortName).then(function (books) {
                 for(var i=0;i<books.length;i++){
                     books[i].sortId=sortId;
+                    books[i].bookCover=tools.imgCahnge(books[i].bookCover);
                 }
+
                 res.render('sortEdit', {
                     sort: sort,
                     books: books
@@ -113,6 +119,8 @@ router.get('/:sortId/book/:bookId/edit', checkLogin, function (req, res, next) {
             if (!book) {
                 throw new Error('该书本不存在');
             }
+
+            book.bookCover=tools.imgCahnge(book.bookCover);
             SortModel.showSorts().then(function (sorts) {
                 res.render('sortBookEdit', {
                     sortId:sortId,

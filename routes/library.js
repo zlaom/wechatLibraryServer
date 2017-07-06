@@ -46,7 +46,7 @@ router.get('/sortDetail', function (req, res, next) {
             for (var i = 0; i < obj.length; i++) {
                 books[i] = {
                     bookId: obj[i].bookId,
-                    cover: obj[i].bookCover,
+                    bookCover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
                     bookAuthor: obj[i].bookAuthor,
                     bookAbstract: obj[i].bookAbstract,

@@ -21,7 +21,7 @@ module.exports = {
                 if (!newclient.name) {
                     newclient.name = msg;
                     users[i++]=newclient;
-                    console.log(users);
+                    //console.log(users);
                     console.log(newclient.name + "已经连接服务器");
                 }
             });
@@ -30,20 +30,22 @@ module.exports = {
                 console.log(newclient.name + "与服务器断开连接");
                 users.splice(users.indexOf(newclient),1);//删除对象
                 i--;
-                console.log(users);
             });
         });
     },
     sendUseMsg:function sendUseMsg(author,userId,msg,type) {
         var send=false;
-        var message = {
-            userId: userId,
-            author: author,
-            messageData: msg
-        };
-        MessageModel.create(message);
+        var dataArray = msg.split("_");
+        if(dataArray[0]=='message'){
+            var message = {
+                userId: userId,
+                author: author,
+                messageData: dataArray[1]
+            };
+            MessageModel.create(message);
+        }
         users.forEach(function user(user){
-            if(user.name==name){
+            if(user.name==userId){
                 console.log("已发送");
                 user.socket.send(msg);
                 send =true;

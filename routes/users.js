@@ -45,7 +45,7 @@ router.post('/:userId/edit', checkLogin, function (req, res, next) {
     var author="管理员";
     var _id = req.params.userId;
     if(req.fields.message){
-        var message='message_'+req.fields.message;
+        var message=req.fields.message;//'message_'+
         console.log(message);
         websocket.sendUseMsg(author,_id,message,"3");
         req.flash('success', '发送通知成功');

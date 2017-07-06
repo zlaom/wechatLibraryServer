@@ -4,110 +4,25 @@
  */
 var BookStatus = require('../../models/bookStatus');
 var Books = require('../../models/books');
+var config = require('config-lite');
 var moment = require('moment');
 
 //虚拟参数
-var type = ['cancelRe', 'recommend'];//搜集数据不需要取消借阅的书
-var vBooks = [
-    {
-        "bookId": "11111",
-        "bookTitle": "书本1",
-        "bookAuthor": "作者1",
-        "bookPress": "出版社1",
-        "bookSorts": [
-            "语文",
-            "科学"
-        ]
-    },
-    {
-        "bookId": "11112",
-        "bookTitle": "书本2",
-        "bookAuthor": "作者2",
-        "bookPress": "出版社1",
-        "bookSorts": [
-            "小说",
-            "生物"
-        ]
-    },
-    {
-        "bookId": "11113",
-        "bookTitle": "书本3",
-        "bookAuthor": "作者3",
-        "bookPress": "出版社2",
-        "bookSorts": [
-            "生物",
-            "语文",
-            "科学"
-        ]
-    },
-    {
-        "bookId": "11114",
-        "bookTitle": "书本4",
-        "bookAuthor": "作者4",
-        "bookPress": "出版社1",
-        "bookSorts": [
-            "生物",
-            "语文",
-            "小说"
-        ]
-    },
-    {
-        "bookId": "11116",
-        "bookTitle": "书本5",
-        "bookAuthor": "作者5",
-        "bookPress": "出版社3",
-        "bookSorts": [
-            "生物",
-            "语文",
-            "小说"
-        ]
-    },
-    {
-        "bookId": "11117",
-        "bookTitle": "书本1",
-        "bookAuthor": "作者6",
-        "bookPress": "出版社4",
-        "bookSorts": [
-            "生物",
-            "科学",
-            "小说"
-        ]
-    },
-    {
-        "bookId": "11118",
-        "bookTitle": "书本1",
-        "bookAuthor": "作者2",
-        "bookPress": "出版社2",
-        "bookSorts": [
-            "语文",
-            "科学"
-        ]
-    },
-    {
-        "bookId": "11119",
-        "bookTitle": "书本8",
-        "bookAuthor": "作者1",
-        "bookPress": "出版社3",
-        "bookSorts": [
-            "生物",
-            "科学"
-        ]
-    }
-];//模拟数据
+var type = config.type;// ['cancelRe', 'recommend'];//搜集数据不需要取消借阅状态，推荐状态的书
 
 //初始设定
 // 用户最近数据量
-var userDataNum = 10;// 推荐根据的数量量
+var userDataNum = config.userDataNum//;10;// 推荐根据的数量量
 // 返回结果数量
-var bookNum = 5;//返回的推荐书籍数量
+var bookNum = config.bookNum;//返回的推荐书籍数量
 // 书籍数据库查找设置
-var pLimit = 10;//每次查找数量
+var pLimit = config.pLimit;//每次查找数量
 
 
 // 权值设定
-var wBookName = 5;//书名
-var wAuthor = 4;//作者
-var wSort = 3;//分类
+var wBookName = config.wBookName;//书名
+var wAuthor = config.wAuthor;//作者
+var wSort = config.wSort;//分类
 
 // 权值排序
 function down(x, y) {
@@ -129,136 +44,149 @@ function oneceRecommend(userId, skip, then) {
     var sortTemp = false;
     var tBooks = [];
     BookStatus.findLimitNotType(userId, type, userDataNum).then(function (uBooks) {
-        uBooks.forEach(function (book) {
-            //判断不同的书名
-            for (var i = 0; i < BookName.length; i++) {
-                if (BookName[i] == book.bookTitle) {
-                    nameTemp = true;
-                    break;
-                }
-            }
-            if (!nameTemp) {
-                BookName.push(book.bookTitle);
-            }
-            nameTemp = false;
-
-            //判断不同的作者
-            for (var i = 0; i < Author.length; i++) {
-                if (Author[i] == book.bookAuthor) {
-                    authorTemp = true;
-                    break;
-                }
-            }
-            if (!authorTemp) {
-                Author.push(book.bookAuthor);
-            }
-            authorTemp = false;
-
-            //判断不同的出版社
-            for (var i = 0; i < BookPress.length; i++) {
-                if (BookPress[i] == book.bookPress) {
-                    pressTemp = true;
-                    break;
-                }
-            }
-            if (!pressTemp) {
-                BookPress.push(book.bookPress);
-            }
-            pressTemp = false;
-
-
-            // 判断不同的类别
-            for (var j = 0; j < book.bookSorts.length; j++) {
-                for (var i = 0; i < Sort.length; i++) {
-                    if (Sort[i] == book.bookSorts[j]) {
-                        sortTemp = true;
-                        break;
-                    }
-                }
-                if (!sortTemp) {
-                    Sort.push(book.bookSorts[j])
-                }
-                sortTemp = false;
-            }
-
-
-        });
-        BookStatus.findNotType(userId, type, userDataNum).then(function (obj1) {
-            var idTemp2 = false;
-            // 获取不能选择的bookId
-            for (var i = 0; i < obj1.length; i++) {
-                for (var j = 0; j < BookId.length; j++) {
-                    if (obj1[i].bookId == BookId[j]) {
-                        idTemp2 = true;
-                    }
-                }
-                if (!idTemp2) {
-                    BookId.push(obj1[i].bookId);
-                }
-                idTemp2 = false;
-            }
-            // 开始查找推荐书籍
-
-            Books.findSortBrow(skip, pLimit).then(function (obj) {
-                /* console.log(obj);*/
+        if(uBooks.length==0){
+            Books.findSortBrow(skip, bookNum).then(function (obj) {
                 for (var j = 0; j < obj.length; j++) {
-                    //先检查id值
-                    for (var m = 0; m < BookId.length; m++) {
-                        if (obj[j].bookId == BookId[m]) {
-                            idTemp = true;
-                            break;
-                        }
-                    }
-                    if (idTemp) {
-                        idTemp = false;
-                        continue;
-                    }
-                    //开始权值计算
-                    obj[j].Sample = 0;
-                    for (var m = 0; m < BookName.length; m++) {//书名匹配
-                        if (obj[j].bookTitle == BookName[m]) {
-                            obj[j].Sample = obj[j].Sample + wBookName;
-                            break;
-                        }
-                    }
-                    for (var m = 0; m < Author.length; m++) {// 作者匹配
-                        if (obj[j].bookAuthor == Author[m]) {
-                            obj[j].Sample = obj[j].Sample + wAuthor;
-                            break;
-                        }
-                    }
-                    for (var n = 0; n < obj[j].bookSorts.length; n++) {// 分类匹配
-                        for (var m = 0; m < Sort.length; m++) {
-                            if (obj[j].bookSorts[n] == Sort[m]) {
-                                obj[j].Sample = obj[j].Sample + wSort;
-                            }
-                        }
-                    }
-                    //权值计算完毕，写入books
+                    //写入books
                     tBooks.push(obj[j]);
                     console.log('写入');
-
                 }
                 setTimeout(function () {
-                    console.log('BookId');
-                    console.log(BookId);
-                    console.log('BookName');
-                    console.log(BookName);
-                    console.log('Author');
-                    console.log(Author);
-                    console.log('BookPress');
-                    console.log(BookPress);
-                    console.log('Sort');
-                    console.log(Sort);
-                    console.log('tBooks');
                     console.log(tBooks);
                     then(tBooks);
                 }, 50);
+            })
+        }else{
+            uBooks.forEach(function (book) {
+                //判断不同的书名
+                for (var i = 0; i < BookName.length; i++) {
+                    if (BookName[i] == book.bookTitle) {
+                        nameTemp = true;
+                        break;
+                    }
+                }
+                if (!nameTemp) {
+                    BookName.push(book.bookTitle);
+                }
+                nameTemp = false;
 
-                /* console.log(tBooks);*/
+                //判断不同的作者
+                for (var i = 0; i < Author.length; i++) {
+                    if (Author[i] == book.bookAuthor) {
+                        authorTemp = true;
+                        break;
+                    }
+                }
+                if (!authorTemp) {
+                    Author.push(book.bookAuthor);
+                }
+                authorTemp = false;
+
+                //判断不同的出版社
+                for (var i = 0; i < BookPress.length; i++) {
+                    if (BookPress[i] == book.bookPress) {
+                        pressTemp = true;
+                        break;
+                    }
+                }
+                if (!pressTemp) {
+                    BookPress.push(book.bookPress);
+                }
+                pressTemp = false;
+
+
+                // 判断不同的类别
+                for (var j = 0; j < book.bookSorts.length; j++) {
+                    for (var i = 0; i < Sort.length; i++) {
+                        if (Sort[i] == book.bookSorts[j]) {
+                            sortTemp = true;
+                            break;
+                        }
+                    }
+                    if (!sortTemp) {
+                        Sort.push(book.bookSorts[j])
+                    }
+                    sortTemp = false;
+                }
+
+
             });
+            BookStatus.findNotType(userId, type).then(function (obj1) {
+                var idTemp2 = false;
+                // 获取不能选择的bookId
+                for (var i = 0; i < obj1.length; i++) {
+                    for (var j = 0; j < BookId.length; j++) {
+                        if (obj1[i].bookId == BookId[j]) {
+                            idTemp2 = true;
+                        }
+                    }
+                    if (!idTemp2) {
+                        BookId.push(obj1[i].bookId);
+                    }
+                    idTemp2 = false;
+                }
+                // 开始查找推荐书籍
 
-        });
+                Books.findSortBrow(skip, pLimit).then(function (obj) {
+                    /* console.log(obj);*/
+                    for (var j = 0; j < obj.length; j++) {
+                        //先检查id值
+                        for (var m = 0; m < BookId.length; m++) {
+                            if (obj[j].bookId == BookId[m]) {
+                                idTemp = true;
+                                break;
+                            }
+                        }
+                        if (idTemp) {
+                            idTemp = false;
+                            continue;
+                        }
+                        //开始权值计算
+                        obj[j].Sample = 0;
+                        for (var m = 0; m < BookName.length; m++) {//书名匹配
+                            if (obj[j].bookTitle == BookName[m]) {
+                                obj[j].Sample = obj[j].Sample + wBookName;
+                                break;
+                            }
+                        }
+                        for (var m = 0; m < Author.length; m++) {// 作者匹配
+                            if (obj[j].bookAuthor == Author[m]) {
+                                obj[j].Sample = obj[j].Sample + wAuthor;
+                                break;
+                            }
+                        }
+                        for (var n = 0; n < obj[j].bookSorts.length; n++) {// 分类匹配
+                            for (var m = 0; m < Sort.length; m++) {
+                                if (obj[j].bookSorts[n] == Sort[m]) {
+                                    obj[j].Sample = obj[j].Sample + wSort;
+                                }
+                            }
+                        }
+                        //权值计算完毕，写入books
+                        tBooks.push(obj[j]);
+                        console.log('写入');
+
+                    }
+                    setTimeout(function () {
+                        console.log('BookId');
+                        console.log(BookId);
+                        console.log('BookName');
+                        console.log(BookName);
+                        console.log('Author');
+                        console.log(Author);
+                        console.log('BookPress');
+                        console.log(BookPress);
+                        console.log('Sort');
+                        console.log(Sort);
+                        console.log('tBooks');
+                        console.log(tBooks);
+                        then(tBooks);
+                    }, 50);
+                });
+
+            });
+        }
+
     });
 
 }

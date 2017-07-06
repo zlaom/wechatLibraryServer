@@ -30,8 +30,8 @@ router.get('/', function (req, res, next) {
             var data = [];
             for (var i = 0; i < obj.length; i++) {
                 data[i] = {
-                    id: obj[i].bookId,
-                    cover: obj[i].bookCover,
+                    bookId: obj[i].bookId,
+                    bookCover: obj[i].bookCover,
                     bookName: obj[i].bookTitle,
                     bookAuthor: obj[i].bookAuthor,
                     bookAbstract: obj[i].bookAbstract,
