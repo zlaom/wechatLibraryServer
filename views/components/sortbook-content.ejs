@@ -3,12 +3,12 @@
         <div class="ui segment">
             <div class="ui grid">
                 <div class="six wide column">
-                    <div style="height: 120px">
+                    <div style="height: 120px; overflow: hidden;" >
                         <img src="<%= book.bookCover %>" width="70px"/>
                     </div>
                 </div>
                 <div class="ten wide column">
-                    <h3><a href="/sorts/<%= book.sortId %>/book/<%= book.bookId %>/edit"><%= book.bookTitle %></a></h3>
+                    <h4><a href="/sorts/<%= book.sortId %>/book/<%= book.bookId %>/edit"><%= book.bookTitle %></a></h4>
                     <p>
                         作者：<cite><%= book.bookAuthor %></cite></br>
                         条形码：<cite><%= book.bookId %></cite>

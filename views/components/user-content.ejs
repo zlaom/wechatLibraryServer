@@ -1,10 +1,10 @@
 <div class="four wide column">
     <div class="ui segment">
-        <h3><a href="/users/<%= user.userId %>/edit"><%= user.userId %></a></h3>
+        <h4><a href="/users/<%= user.userId %>/edit"><%= user.userId %></a></h4>
         <p>电话：<%= user.phone %><p>
         <p>身份证：<%= user.idCard %><p>
         <div>
-            <span class="tag"></span>
+            <span class="tag"><%= user.created_at %></span>
             <span class="tag right">
                 <div class="ui inline dropdown">
                     <div class="text"></div>

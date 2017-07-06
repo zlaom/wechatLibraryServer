@@ -2,12 +2,12 @@
     <div class="ui segment">
         <div class="ui grid">
             <div class="six wide column">
-                <div style="height: 120px">
+                <div style="height: 120px; overflow: hidden;" >
                     <img src="<%= sort.sortCover %>" width="70px"/>
                 </div>
             </div>
             <div class="ten wide column">
-                <h3><a href="/sorts/<%= sort._id %>/edit"><%= sort.sortName %>类</a></h3>
+                <h4><a href="/sorts/<%= sort._id %>/edit"><%= sort.sortName %>类</a></h4>
                 <p>藏书数量：<cite><%= sort.sortBkNum %></cite><p>
             </div>
         </div>

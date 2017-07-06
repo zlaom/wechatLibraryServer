@@ -33,7 +33,9 @@ module.exports = {
 
     // 获取所有用户信息
     getUsers: function getUsers() {
-        return User.find().exec();
+        return User.find()
+            .addCreatedAt()
+            .exec();
     },
 
     // 根据Id更改用户信息

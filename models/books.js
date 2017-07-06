@@ -38,7 +38,9 @@ module.exports = {
 
     // 查找一个分类下的所有书
     getBooksBySort: function getBooksBySort(sort) {
-        return Book.find({bookSorts: sort}).exec()
+        return Book.find({bookSorts: sort})
+            .addCreatedAt()
+            .exec()
     },
 
     // 通过Sorts和bookId查找这一本书的4本相关书籍

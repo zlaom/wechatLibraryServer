@@ -18,6 +18,15 @@ router.get('/', checkLogin, function (req, res, next) {
     BookModel.getBooks().then(function (books) {
         for (var i = 0; i < books.length; i++) {
             books[i].bookCover = tools.imgCahnge(books[i].bookCover);
+            var sorts = "";
+            // 进行书籍分类匹配
+            for (var j = 0; j < books[i].bookSorts.length; j++) {
+                var sort = books[i].bookSorts[j];
+                if(sort!='null'){
+                    sorts = sort + ' ' + sorts;
+                }
+            }
+            books[i].bookSorts = sorts;
         }
         res.render('books', {
             books: books
