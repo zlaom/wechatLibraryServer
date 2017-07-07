@@ -52,7 +52,7 @@ function oneceRecommend(userId, skip, then) {
                     console.log('写入');
                 }
                 setTimeout(function () {
-                    console.log(tBooks);
+                    //console.log(tBooks);
                     then(tBooks);
                 }, 50);
             })
@@ -168,7 +168,7 @@ function oneceRecommend(userId, skip, then) {
 
                     }
                     setTimeout(function () {
-                        console.log('BookId');
+      /*                  console.log('BookId');
                         console.log(BookId);
                         console.log('BookName');
                         console.log(BookName);
@@ -179,7 +179,7 @@ function oneceRecommend(userId, skip, then) {
                         console.log('Sort');
                         console.log(Sort);
                         console.log('tBooks');
-                        console.log(tBooks);
+                        console.log(tBooks);*/
                         then(tBooks);
                     }, 50);
                 });
@@ -208,8 +208,8 @@ module.exports = {
                 skip += pLimit;//更新跳跃值
                 oneceRecommend(userId, skip, test);
             } else {
-                console.log('books');
-                console.log(books);
+                //console.log('books');
+                //console.log(books);
                 BookStatus.findOneTypeByUserId(userId, 'recommend').then(function (status) {
                     var temp;//执行标志位
                     if (status.length == 0) {// 当原推荐数目为零时
@@ -227,8 +227,8 @@ module.exports = {
                     } else {
                         temp = 7;
                     }
-                    console.log('temp');
-                    console.log(temp);
+                    //console.log('temp');
+                    //console.log(temp);
                     // 开始操作
                     switch (temp) {
                         case 1://当status长度为0时

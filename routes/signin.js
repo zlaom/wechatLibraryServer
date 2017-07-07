@@ -39,4 +39,20 @@ router.post('/', checkNotLogin, function (req, res, next) {
         .catch(next);
 });
 
+//管理员登陆
+router.post('/managerapp', function (req, res, next) {
+    var account = req.fields.account;
+    var password = req.fields.password;
+
+    ManagerModel.getManagerByName(account).then(function (manager) {
+        if (!manager) {
+            res.send("用户不存在");
+        } else if (password != manager.password) {
+            res.send("密码错误");
+        } else {
+            res.send("成功登录");
+        }
+    })
+});
+
 module.exports = router;

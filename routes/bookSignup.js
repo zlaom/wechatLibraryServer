@@ -26,8 +26,8 @@ router.post('/', checkLogin, function (req, res, next) {
     // 获取变量值
     var bookId = req.fields.bookId;
     var bookTitle = req.fields.bookTitle;
-    var bookCompleteSpelling=req.fields.bookCompleteSpelling;
-    var bookInitial=req.fields.bookInitial;
+    var bookCompleteSpelling = req.fields.bookCompleteSpelling;
+    var bookInitial = req.fields.bookInitial;
     var bookCover = req.files.bookCover.path.split(path.sep).pop();
     var bookAuthor = req.fields.bookAuthor;
     var bookPress = req.fields.bookPress;
@@ -47,22 +47,19 @@ router.post('/', checkLogin, function (req, res, next) {
     // 增加分类下的书本数目
     if (bookSort1) {
         bookSorts[i] = bookSort1;
-        for (var j = 0; j < bookNum; j++)
-            SortModel.updateSortBkNumBySortEname(bookSort1);
+        SortModel.updateSortBkNumBySortEname(bookSort1);
         i++;
     }
     if (bookSort2 && bookSort2 != bookSort1) {
         bookSorts[i] = bookSort2;
-        for (var j = 0; j < bookNum; j++)
-            SortModel.updateSortBkNumBySortEname(bookSort2);
         i++;
+        SortModel.updateSortBkNumBySortEname(bookSort2);
     }
     if (bookSort3 && bookSort3 != bookSort1) {
         if (bookSort3 != bookSort2) {
             bookSorts[i] = bookSort3;
-            for (var j = 0; j < bookNum; j++)
-                SortModel.updateSortBkNumBySortEname(bookSort3);
             i++;
+            SortModel.updateSortBkNumBySortEname(bookSort3);
         }
 
     }
@@ -74,12 +71,12 @@ router.post('/', checkLogin, function (req, res, next) {
         if (!bookTitle) {
             throw new Error('请填写书名');
         }
-        if (!bookInitial) {
+/*        if (!bookInitial) {
             throw new Error('请填写首字母');
         }
         if (!bookCompleteSpelling) {
             throw new Error('请填写全拼');
-        }
+        }*/
         if (!req.files.bookCover.name) {
             throw new Error('选择封面文件');
         }
@@ -89,13 +86,13 @@ router.post('/', checkLogin, function (req, res, next) {
         if (!bookPress) {
             throw new Error('请填写出版社');
         }
-        if(i=0){
+        if (i = 0) {
             throw new Error('请至少填写一个所属分类');
         }
-        if(!bookNum){
+        if (!bookNum) {
             throw new Error('请填写书籍数量');
         }
-        if (!(bookAbstract.length>0 )) {
+        if (!(bookAbstract.length > 0 )) {
             throw new Error('请填写书籍简介');
         }
     } catch (e) {
@@ -105,12 +102,25 @@ router.post('/', checkLogin, function (req, res, next) {
         return res.redirect('/bookSignup');
     }
 
+    // 增加分类下的书本数目
+    if (bookSort1) {
+        SortModel.updateSortBkNumBySortEname(bookSort1);
+    }
+    if (bookSort2 && bookSort2 != bookSort1) {
+        SortModel.updateSortBkNumBySortEname(bookSort2);
+    }
+    if (bookSort3 && bookSort3 != bookSort1) {
+        if (bookSort3 != bookSort2) {
+            SortModel.updateSortBkNumBySortEname(bookSort3);
+        }
+    }
+
     //模板赋值
     var book = {
         bookId: bookId,
         bookTitle: bookTitle,
-        bookCompleteSpelling:bookCompleteSpelling,
-        bookInitial:bookInitial,
+        bookCompleteSpelling: bookCompleteSpelling,
+        bookInitial: bookInitial,
         bookCover: bookCover,
         bookAuthor: bookAuthor,
         bookPress: bookPress,
@@ -126,7 +136,7 @@ router.post('/', checkLogin, function (req, res, next) {
         .then(function () {
             req.flash('success', '书籍注册成功');
             res.redirect('/bookSignup');
-        }) .catch(function (e) {
+        }).catch(function (e) {
         fs.unlink(req.files.bookCover.path);
         if (e.message.match('E11000 duplicate key')) {
             req.flash('error', '条形码已被占用');
@@ -134,8 +144,6 @@ router.post('/', checkLogin, function (req, res, next) {
         }
         next(e);
     });// 记得写纠错
-
-
 });
 
 module.exports = router;

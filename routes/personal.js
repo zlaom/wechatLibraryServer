@@ -48,8 +48,8 @@ router.get('/', function (req, res, next) {// 获得个人主页需要的数据
                             if(rBooks[i].resources>0){
                                 oneBook2.returnTime='保留至'+moment(rBooks[i].returnTime).format('M') + '月' + moment(rBooks[i].returnTime).format('D') + '日'
                             }
-                            console.log(moment(rBooks[i].returnTime).format('M,d'));
-                            console.log(moment().format('M,d'));
+                            //console.log(moment(rBooks[i].returnTime).format('M,d'));
+                            //console.log(moment().format('M,d'));
                             data.reserveBook.push(oneBook2);
                         }
                         for (var i = 0; i < cBooks.length; i++) { //推荐书籍
@@ -63,7 +63,7 @@ router.get('/', function (req, res, next) {// 获得个人主页需要的数据
                         }
                         data.remindLevel=user.remindLevel;
                         data.remind = messages.length;
-                        console.log(data);
+                        //console.log(data);
                         return res.send(data);
                     });
                 });

@@ -49,15 +49,23 @@ module.exports = {
     updateStatusResourcesByUserBookType: function updateStatusResourcesByUserBookType(userId, bookId, type, resources) {
         return BookStatus.update({userId: userId, bookId: bookId, type: type}, {$set: {resources: resources}}).exec();
     },
-
+    // 通过_id更新资源数
+    updateStatusResourcesById: function updateStatusResourcesById(id, resources) {
+        return BookStatus.update({_id:id}, {$set: {resources: resources}}).exec();
+    },
     // 获得一段时间的书本状态
     getBookStatusByStartEnd: function getBookStatusByTime(start, end, type) {
-        return BookStatus.find({createTime: {$gte: start, $lt: end}, type: type}).exec();
+        return BookStatus.find({updateTime: {$gte: start, $lt: end}, type: type}).exec();
     },
+    // 获得一段时间的持有资源书本状态
+    getReturnBookStatusByStartEnd: function getReturnBookStatusByStartEnd(start, end, type) {
+        return BookStatus.find({returnTime: {$gte: start, $lt: end}, type: type,resources:1}).exec();
+    },
+
 
     // 获得一个时间之前的书本状态
     getBookStatusByEnd: function getBookStatusByStart(end, type) {
-        return BookStatus.find({createTime: {$lt: end}, type: type}).exec();
+        return BookStatus.find({updateTime: {$lt: end}, type: type}).exec();
     },
 
     //通过userId和bookId获得一个用户的bookStatus
@@ -104,8 +112,8 @@ module.exports = {
 
     },
     // 找到下一个可以拿到这本书的预约用户
-    findNextReserveUser: function findNextReserveUser(){
-       return  BookStatus.find({'type': 'reserve'}).sort({'createTime': 1}).limit(1).exec()
+    findNextReserveUser: function findNextReserveUser(bookId){
+       return  BookStatus.find({'type': 'reserve',bookId:bookId,resources:0}).sort({'updateTime': 1}).limit(1).exec()
     },
 
     // 查找用户状态type不为某个值的记录
@@ -129,5 +137,9 @@ module.exports = {
     //全部更新
     allUpDataByStatusId:function allUpDataByStatusId(statusId,status){
         return BookStatus.update({_id:statusId},{$set:status}).exec();
+    },
+    // 找到资源数为1的，returnTime
+    haveResource:function haveResource(type,date){
+        return BookStatus.find({resources:1,type:type,returnTime:date}).exec();
     }
 };
