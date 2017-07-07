@@ -6,12 +6,14 @@
 var express = require('express');
 var router = express.Router();
 var Book = require('../models/books');// 书籍模型
-
+var limit =10;
 /**
  * 搜索功能
  */
 router.get('/', function (req, res, next) {
     var reg = new RegExp(req.query.content);
+    var skip = req.query.skip;
+    console.log('skip'+skip);
     var queryTitle = {
         $or: [
             {'bookTitle': reg},
@@ -21,8 +23,8 @@ router.get('/', function (req, res, next) {
             {'bookAuthor': reg}
         ]
     };
-    Book.getBookBySearch(queryTitle).then(function (obj) {
-        console.log(obj.length);
+    Book.getBookBySearch(queryTitle,limit,parseInt(skip)).then(function (obj) {
+        console.log(obj);
         if (!obj.length) {
             var message = 'not found';
             res.send(message);

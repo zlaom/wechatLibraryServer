@@ -11,6 +11,7 @@ var MessageModel = require('../models/messages');// 消息模型
 var SortModel = require('../models/sorts');// 类型模型
 var checkLogin = require('../middlewares/check').checkLogin;
 var recommend=require('../public/js/recommend');
+var limit =10;
 
 
 //GET /library/Sorts 获得所有分类
@@ -38,7 +39,9 @@ router.get('/Sorts', function (req, res, next) {
 //GET /library/sortDetail 得到一个分类下的所有书籍
 router.get('/sortDetail', function (req, res, next) {
     var sort = req.query.bookSort;
-    BookModel.getBooksByBookSort(sort).then(function (obj) {
+    var skip = req.query.skip;
+    console.log(skip);
+    BookModel.getBooksByBookSort(sort,limit,parseInt(skip)).then(function (obj) {
         if (!obj) {
             console.log('查找:' + query + ',未找到结果!');
         } else {

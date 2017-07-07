@@ -27,8 +27,12 @@ module.exports = {
     },
 
     // 通过分类查找一类书
-    getBooksByBookSort: function getBooksByBookSort(sorts) {
-        return Book.find({bookSorts: sorts}).exec();
+    getBooksByBookSort: function getBooksByBookSort(sorts,limit,skipNum) {
+        return Book.find({bookSorts: sorts})
+            .sort({_id:-1})
+            .skip(skipNum)
+            .limit(limit)
+            .exec();
     },
 
     // 通过分类查找推荐书籍
@@ -59,8 +63,12 @@ module.exports = {
     },
 
     // 按照搜索内容查找
-    getBookBySearch: function getBookBySearch(query) {
-        return Book.find(query).exec()
+    getBookBySearch: function getBookBySearch(query,limitNum,skipNum) {
+        return Book.find(query)
+            .sort({bookBowNum:-1})
+            .skip(skipNum)
+            .limit(limitNum)
+            .exec()
     },
 
     // 通过bookId删除一本书
