@@ -29,7 +29,7 @@ var requestData = {
 var url=[];
 for(var i=0;i<100;i++) {
 
-    var si = i + 1210531;
+    var si = i + 27052524;
     url [i]= "https://api.douban.com/v2/book/" + si;
 }
 for( x in url ) {
@@ -56,7 +56,7 @@ for( x in url ) {
             var book = {
                 bookId: body.isbn13,
                 bookTitle: body.title,
-                bookCover: body.images.small,
+                bookCover: body.images.large,
                 bookAuthor: body.author[0],
                 bookPress: body.publisher,
                 bookSorts: bookSort,
