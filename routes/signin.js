@@ -47,7 +47,7 @@ router.post('/managerapp', function (req, res, next) {
     ManagerModel.getManagerByName(account).then(function (manager) {
         if (!manager) {
             res.send("用户不存在");
-        } else if (password != manager.password) {
+        } else if (sha1(password) != manager.password) {
             res.send("密码错误");
         } else {
             res.send("成功登录");

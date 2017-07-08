@@ -71,7 +71,8 @@ router.get('/bookDetail', function (req, res, next) {
         book: '',
         relatedBooks: '',
         bookStatus: '',
-        statusId: 'null'
+        statusId: 'null',
+        resources:0
     };
 
     //获得一本书
@@ -80,7 +81,7 @@ router.get('/bookDetail', function (req, res, next) {
         var BookId = book.bookId;
         var sorts = "";
 
-        // 进行书籍分类匹配
+        // 书籍分类
         for (var i = 0; i < book.bookSorts.length; i++) {
             var sort = book.bookSorts[i];
             if(sort!='null'){
@@ -112,12 +113,14 @@ router.get('/bookDetail', function (req, res, next) {
                         } else {
                             data.bookStatus = "borrow";
                             data.statusId = obj._id;
+                            data.resources=obj.resources;
                         }
                         res.send(data);
                     })
                 } else {
                     data.bookStatus = "reserve";
                     data.statusId = obj._id;
+                    data.resources=obj.resources;
                     res.send(data);
                 }
             });
