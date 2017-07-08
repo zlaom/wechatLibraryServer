@@ -288,7 +288,7 @@ $ pm2 start index.js
   - 优化书籍详情页面信息显示，增加了取消资源等待选项
 
 ## 主要参考资料
-- [一起学 Node.js]https://github.com/nswbmw/N-blog(https://github.com/nswbmw/N-blog)
+- [一起学 Node.js](https://github.com/nswbmw/N-blog(https://github.com/nswbmw/N-blog)
 - [ngnix安装教程](http://www.linuxidc.com/Linux/2016-09/134907.htm)
 
 ## 贡献者
