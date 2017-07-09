@@ -8,10 +8,11 @@
 [![Node Version][node-image]][node-url]
 [![Mongodb Version][mongodb-image]][mongodb-url]
 [![Linux Build][linux-image]][linux-url]
-[![Wechat Tool][wechat-image]][wechat-url]
-## 目录
->测试网址位于使用说明
+[![Wechat Tool][wechat-image]][wechat-url]  
 
+## 目录
+
+ * [演示视频&&测试地址](#演示视频&&测试地址)
  * [背景](#背景)
  * [设计理念](#设计理念)
  * [必要条件](#必要条件)
@@ -28,12 +29,18 @@
  * [主要参考资料](#主要参考资料)
  * [贡献者](#贡献者)
 
+## 演示视频&&测试地址
+[演示视频地址]()
+[网页管理员端测试网址](https://www.damiangao.cn/signin)(管理员密钥为：1479833945)
+
 ## 背景
 第六届“中国软件杯”大学生软件设计大赛赛题。意在制作一款方便人们借阅图书的软件，以提高人们的精神生活水平。   
 [大赛官网](http://www.cnsoftbei.com/)
+
 ## 设计理念
 - 界面简洁大方
 - 操作方便快捷
+
 ## 必要条件
 程序要求在以下环境中运行：
 - [Node.js v6.10.3+](https://nodejs.org/en/download/)
